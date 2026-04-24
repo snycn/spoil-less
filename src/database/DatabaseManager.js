@@ -57,9 +57,8 @@ export function initializeDatabase() {
         );
     `);
 
-    // Count number of rows from profiles table, given as a table 'count', then returned as object.
-    const row = db.getFirstSync('SELECT COUNT(*) as count FROM profiles');
-    const count = row.count;
+    // Count number of rows from profiles table, returned as object e.g. {count: 5}
+    const { count } = db.getFirstSync('SELECT COUNT(*) as count FROM profiles');
 
     // If count is 0 then there are no profiles. Create one along with creation date.
     if (count === 0) {
