@@ -1,3 +1,4 @@
+import * as Crypto from 'expo-crypto';
 import { db } from '../database/DatabaseManager';
 import { addFoodItem } from './foodItemRepository';
 
@@ -10,7 +11,7 @@ export function getShoppingListItemById(id) {
 }
 
 export function addShoppingListItem(profileId, name) {
-    const id = crypto.randomUUID();
+    const id = Crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
     // Flag is for the UI notice, insert still happens regardless of duplicate.

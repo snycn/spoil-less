@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Crypto from 'expo-crypto';
 import { db } from '../database/DatabaseManager';
 import { cancelAllNotificationsForProfile } from '../services/notificationScheduler';
 
@@ -16,7 +17,7 @@ export function getProfileById(id) {
 
 // Creates profile then returns it.
 export function addProfile(name) {
-    const id = crypto.randomUUID();
+    const id = Crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
     db.runSync('INSERT INTO profiles (id, name, createdAt) VALUES (?, ?, ?)', [id, name, createdAt]);

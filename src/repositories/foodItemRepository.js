@@ -1,3 +1,4 @@
+import * as Crypto from 'expo-crypto';
 import { db } from '../database/DatabaseManager';
 import { getDefaultExpirationDate } from '../services/expirationService';
 import { cancelItemNotifications, scheduleItemNotifications } from '../services/notificationScheduler';
@@ -32,7 +33,7 @@ export function getExpiringSoonItems(profileId, thresholdDays) {
 
 // Accepts an item and destructures its properties. Assign default parameter values for the optional fields.
 export function addFoodItem({ profileId, name, expirationDate, storageLocationId, categoryId = null, note = null, photoUri = null, usedDefaultExpiry = false }) {
-    const id = crypto.randomUUID();
+    const id = Crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
     let finalExpDate = expirationDate;

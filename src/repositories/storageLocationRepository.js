@@ -1,3 +1,4 @@
+import * as Crypto from 'expo-crypto';
 import { db } from '../database/DatabaseManager';
 
 export function getStorageLocations(profileId) {
@@ -16,7 +17,7 @@ export function getActiveItemCount(locationId) {
 }
 
 export function addStorageLocation(profileId, name) {
-    const id = crypto.randomUUID();
+    const id = Crypto.randomUUID();
     db.runSync('INSERT INTO storage_locations (id, profileId, name) VALUES (?, ?, ?)', [id, profileId, name]);
     return getStorageLocationById(id);
 }

@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import * as Crypto from 'expo-crypto';
 
 // Creates database file, or opens if already exists, then returns database object db.
 export const db = SQLite.openDatabaseSync('spoil-less.db');
@@ -62,7 +63,7 @@ export function initializeDatabase() {
 
     // If count is 0 then there are no profiles. Create one along with creation date.
     if (count === 0) {
-        const id = crypto.randomUUID();
+        const id = Crypto.randomUUID();
         const createdAt = new Date().toISOString();
         db.runSync('INSERT INTO profiles (id, name, createdAt) VALUES (?, ?, ?)', [id, 'My Profile', createdAt]);
         db.runSync('INSERT INTO notification_preferences (profileId, enabled, daysBefore) VALUES (?, ?, ?)',[id, 1, 3]);
