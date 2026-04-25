@@ -1,5 +1,14 @@
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 import { db } from '../database/DatabaseManager';
+
+// Registers a default channel for notifs to go through b/c Android requires channels.
+if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+        name: 'Default',
+        importance: Notifications.AndroidImportance.DEFAULT,
+    }).catch((err) => console.warn('Failed to set Android channel:', err)); // Catch error in case channel setup fails.
+}
 
 async function notifs() {
   return {
@@ -9,8 +18,32 @@ async function notifs() {
   };
 }
 
-// Expects an object with a property 'handleNotification', whose value is a function that returns an object with the notif settings
+// Expects object with property 'handleNotification' with a function that returns an object with notif settings
 Notifications.setNotificationHandler({handleNotification: notifs});
+
+export async function sendTestNotification(seconds = 5) {
+    try {
+        const perms = await Notifications.getPermissionsAsync();
+        if (!perms.granted) {
+            const request = await Notifications.requestPermissionsAsync();
+            if (!request.granted) return false;
+        }
+
+        await Notifications.scheduleNotificationAsync({
+            identifier: 'spoil-less-test',
+            content: {
+                title: 'Test notification',
+                body: `Fired ${seconds}s after pressing the button.`,
+                data: { test: true },
+            },
+            trigger: { seconds, type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL },
+        });
+        return true;
+    } catch (err) {
+        console.warn('sendTestNotification failed:', err);
+        return false;
+    }
+}
 
 export async function scheduleItemNotifications(item) {
     try {
