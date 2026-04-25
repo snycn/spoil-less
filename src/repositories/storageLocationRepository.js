@@ -1,8 +1,8 @@
 import * as Crypto from 'expo-crypto';
 import { db } from '../database/DatabaseManager';
 
-export function getStorageLocations(profileId) {
-    return db.getAllSync('SELECT * FROM storage_locations WHERE profileId = ? ORDER BY name ASC', [profileId]);
+export function getStorageLocations() {
+    return db.getAllSync('SELECT * FROM storage_locations ORDER BY name ASC');
 }
 
 export function getStorageLocationById(id) {
@@ -16,9 +16,9 @@ export function getActiveItemCount(locationId) {
     return count;
 }
 
-export function addStorageLocation(profileId, name) {
+export function addStorageLocation(name) {
     const id = Crypto.randomUUID();
-    db.runSync('INSERT INTO storage_locations (id, profileId, name) VALUES (?, ?, ?)', [id, profileId, name]);
+    db.runSync('INSERT INTO storage_locations (id, name) VALUES (?, ?)', [id, name]);
     return getStorageLocationById(id);
 }
 

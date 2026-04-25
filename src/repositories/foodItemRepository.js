@@ -7,32 +7,32 @@ export function getFoodItemById(id) {
     return db.getFirstSync('SELECT * FROM food_items WHERE id = ?', [id]);
 }
 
-export function getActiveFoodItems(profileId) {
-    return db.getAllSync("SELECT * FROM food_items WHERE profileId = ? AND status = 'active' ORDER BY expirationDate ASC", [profileId]);
+export function getActiveFoodItems() {
+    return db.getAllSync("SELECT * FROM food_items WHERE status = 'active' ORDER BY expirationDate ASC");
 }
 
-export function getItemsByLocation(profileId, storageLocationId) {
-    return db.getAllSync("SELECT * FROM food_items WHERE profileId = ? AND storageLocationId = ? AND status = 'active' ORDER BY expirationDate ASC",
-        [profileId, storageLocationId]);
+export function getItemsByLocation(storageLocationId) {
+    return db.getAllSync("SELECT * FROM food_items WHERE storageLocationId = ? AND status = 'active' ORDER BY expirationDate ASC",
+        [storageLocationId]);
 }
 
-export function getItemsByCategory(profileId, categoryId) {
-    return db.getAllSync("SELECT * FROM food_items WHERE profileId = ? AND categoryId = ? AND status = 'active' ORDER BY expirationDate ASC",
-        [profileId, categoryId]);
+export function getItemsByCategory(categoryId) {
+    return db.getAllSync("SELECT * FROM food_items WHERE categoryId = ? AND status = 'active' ORDER BY expirationDate ASC",
+        [categoryId]);
 }
 
-export function getExpiringSoonItems(profileId, thresholdDays) {
+export function getExpiringSoonItems(thresholdDays) {
     const threshold = new Date();
     threshold.setDate(threshold.getDate() + thresholdDays);
     const thresholdDate = threshold.toISOString().split('T')[0];
-    
+
     // Return array of objs of all columns where expiration date <= threshold.
-    return db.getAllSync("SELECT * FROM food_items WHERE profileId = ? AND status = 'active' AND expirationDate <= ? ORDER BY expirationDate ASC",
-        [profileId, thresholdDate]);
+    return db.getAllSync("SELECT * FROM food_items WHERE status = 'active' AND expirationDate <= ? ORDER BY expirationDate ASC",
+        [thresholdDate]);
 }
 
 // Accepts an item and destructures its properties. Assign default parameter values for the optional fields.
-export function addFoodItem({ profileId, name, expirationDate, storageLocationId, categoryId = null, note = null, photoUri = null, usedDefaultExpiry = false }) {
+export function addFoodItem({ name, expirationDate, storageLocationId, categoryId = null, note = null, photoUri = null, usedDefaultExpiry = false }) {
     const id = Crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
@@ -46,9 +46,9 @@ export function addFoodItem({ profileId, name, expirationDate, storageLocationId
     }
 
     db.runSync(`INSERT INTO food_items
-        (id, profileId, name, expirationDate, storageLocationId, categoryId, note, photoUri, status, usedDefaultExpiry, createdAt)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?)`,
-        [id, profileId, name, finalExpDate, storageLocationId, categoryId, note, photoUri, useDefault, createdAt]);
+        (id, name, expirationDate, storageLocationId, categoryId, note, photoUri, status, usedDefaultExpiry, createdAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?)`,
+        [id, name, finalExpDate, storageLocationId, categoryId, note, photoUri, useDefault, createdAt]);
 
     // Schedules and returns item
     const item = getFoodItemById(id);

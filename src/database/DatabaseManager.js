@@ -1,33 +1,23 @@
-import * as Crypto from 'expo-crypto';
 import * as SQLite from 'expo-sqlite';
-
+SQLite.deleteDatabaseSync('spoil-less.db');
 // Creates database file, or opens if already exists, then returns database object db.
 export const db = SQLite.openDatabaseSync('spoil-less.db');
 
 // Creates the tables if they do not exist. Blocks until it finishes.
 export function initializeDatabase() {
     db.execSync(`
-        CREATE TABLE IF NOT EXISTS profiles (
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            createdAt TEXT NOT NULL
-        );
-
         CREATE TABLE IF NOT EXISTS storage_locations (
             id TEXT PRIMARY KEY,
-            profileId TEXT NOT NULL,
             name TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS categories (
             id TEXT PRIMARY KEY,
-            profileId TEXT NOT NULL,
             name TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS food_items (
             id TEXT PRIMARY KEY,
-            profileId TEXT NOT NULL,
             name TEXT NOT NULL,
             expirationDate TEXT NOT NULL,
             storageLocationId TEXT NOT NULL,
@@ -41,13 +31,12 @@ export function initializeDatabase() {
 
         CREATE TABLE IF NOT EXISTS shopping_list_items (
             id TEXT PRIMARY KEY,
-            profileId TEXT NOT NULL,
             name TEXT NOT NULL,
             createdAt TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS notification_preferences (
-            profileId TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
             enabled INTEGER NOT NULL,
             daysBefore INTEGER NOT NULL
         );
@@ -58,16 +47,8 @@ export function initializeDatabase() {
         );
     `);
 
-    // Count number of rows from profiles table, returned as object e.g. {count: 5}
-    const { count } = db.getFirstSync('SELECT COUNT(*) as count FROM profiles');
-
-    // If count is 0 then there are no profiles. Create one along with creation date.
-    if (count === 0) {
-        const id = Crypto.randomUUID();
-        const createdAt = new Date().toISOString();
-        db.runSync('INSERT INTO profiles (id, name, createdAt) VALUES (?, ?, ?)', [id, 'My Profile', createdAt]);
-        db.runSync('INSERT INTO notification_preferences (profileId, enabled, daysBefore) VALUES (?, ?, ?)',[id, 1, 3]);
-    }
+    // Single notification preferences row (id=1). INSERT OR IGNORE so it's only created once.
+    db.runSync('INSERT OR IGNORE INTO notification_preferences (id, enabled, daysBefore) VALUES (1, 1, 3)');
 
     // Default expiries
     const expiryData = [
@@ -113,7 +94,6 @@ export function initializeDatabase() {
         ['Yogurt', 14],
     ];
 
-    // Enhanced for loop. Destructures inner arrays.
     for (const [itemName, defaultDays] of expiryData) {
         db.runSync('INSERT OR IGNORE INTO default_expiry_lookup (itemName, defaultDays) VALUES (?, ?)', [itemName, defaultDays]);
     }

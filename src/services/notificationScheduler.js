@@ -48,8 +48,8 @@ export async function sendTestNotification(seconds = 5) {
 
 export async function scheduleItemNotifications(item) {
     try {
-        // Goes to notif_pref table to find the row that == profileId, then get enabled & daysBefore columns. If prefs are not enabled, return.
-        const prefs = db.getFirstSync('SELECT enabled, daysBefore FROM notification_preferences WHERE profileId = ?', [item.profileId]);
+        // Single notification_preferences row (id=1). Get enabled & daysBefore columns. If prefs are not enabled, return.
+        const prefs = db.getFirstSync('SELECT enabled, daysBefore FROM notification_preferences WHERE id = 1');
         if (!prefs || !prefs.enabled) return;
 
         // Checks perms. If none, request. If not permitted then return.
@@ -68,7 +68,7 @@ export async function scheduleItemNotifications(item) {
         const expiryAt9am = new Date(y, m - 1, d, 9);
         const warningAt9am = new Date(y, m - 1, d - prefs.daysBefore, 9);
         const now = new Date();
-        const data = { itemId: item.id, profileId: item.profileId };
+        const data = { itemId: item.id };
 
         // If not passed warning date, schedule the notif.
         if (warningAt9am > now) {
@@ -80,7 +80,7 @@ export async function scheduleItemNotifications(item) {
                     body: `${item.name} expires in ${prefs.daysBefore} day${prefs.daysBefore === 1 ? '' : 's'}.`,
                     data: data
                 },
-                trigger: { date: warningAt9am },
+                trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: warningAt9am },
             });
         }
 
@@ -94,7 +94,7 @@ export async function scheduleItemNotifications(item) {
                     body: `${item.name} expires today.`,
                     data: data
                 },
-                trigger: { date: expiryAt9am },
+                trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: expiryAt9am },
             });
         }
     } 
@@ -113,36 +113,31 @@ export async function cancelItemNotifications(itemId) {
     // Ignore err, if canceling fails the notif doesn't exist anyway works fine.
 }
 
-export async function cancelAllNotificationsForProfile(profileId) {
+export async function cancelAllNotifications() {
     try {
-        // Retrieve all notifications from device. Then iterate through and cancel ones for specified profile.
-        const all = await Notifications.getAllScheduledNotificationsAsync();
-        for (const n of all) {
-            if (n.content?.data?.profileId === profileId) {
-                await Notifications.cancelScheduledNotificationAsync(n.identifier);
-            }
-        }
-    } 
+        // Built-in API to cancel every scheduled notification.
+        await Notifications.cancelAllScheduledNotificationsAsync();
+    }
     catch (err) {
-        console.warn('cancelAllNotificationsForProfile failed:', err);
+        console.warn('cancelAllNotifications failed:', err);
     }
 }
 
-export async function rescheduleAllForProfile(profileId) {
+export async function rescheduleAll() {
     try {
         // Generates today date, then formats it in YYYY-MM-DD
         const t = new Date();
         const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
-        
-        // Looks through food_items where profileId === profileId and item has just expired, or is going to.
-        const items = db.getAllSync("SELECT * FROM food_items WHERE profileId = ? AND status = 'active' AND expirationDate >= ?",
-          [profileId, todayStr]);
-        
+
+        // Looks through food_items for active items that haven't expired yet.
+        const items = db.getAllSync("SELECT * FROM food_items WHERE status = 'active' AND expirationDate >= ?",
+          [todayStr]);
+
         for (const item of items) {
             await scheduleItemNotifications(item);
         }
-    } 
+    }
     catch (err) {
-        console.warn('rescheduleAllForProfile failed:', err);
+        console.warn('rescheduleAll failed:', err);
     }
 }
