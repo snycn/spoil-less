@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-SQLite.deleteDatabaseSync('spoil-less.db');
+
 // Creates database file, or opens if already exists, then returns database object db.
 export const db = SQLite.openDatabaseSync('spoil-less.db');
 
