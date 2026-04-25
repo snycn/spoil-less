@@ -39,7 +39,8 @@ export async function sendTestNotification(seconds = 5) {
             trigger: { seconds, type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL },
         });
         return true;
-    } catch (err) {
+    } 
+    catch (err) {
         console.warn('sendTestNotification failed:', err);
         return false;
     }
