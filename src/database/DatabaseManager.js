@@ -1,5 +1,5 @@
-import * as SQLite from 'expo-sqlite';
 import * as Crypto from 'expo-crypto';
+import * as SQLite from 'expo-sqlite';
 
 // Creates database file, or opens if already exists, then returns database object db.
 export const db = SQLite.openDatabaseSync('spoil-less.db');
