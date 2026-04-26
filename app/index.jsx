@@ -57,7 +57,7 @@ export default function Index() {
         {/* Floating Add Button */}
         <TouchableOpacity
           style={styles.floatingBtn}
-          onPress={() => console.log("Add pressed")}
+          onPress={() => router.push("/add-item")}
         >
           <Text style={styles.plus}>+</Text>
         </TouchableOpacity>
@@ -67,7 +67,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   
-/* main screen */
+//main screen
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-/* Floating Add Button */
+// Floating Add Button
 floatingBtn: {
   position: "absolute",
   bottom: 130,
@@ -131,7 +131,7 @@ plus: {
   marginTop: -2,
 },
 
-/* footer */
+// footer 
   footer: {
     position: "absolute",
     bottom: 50,

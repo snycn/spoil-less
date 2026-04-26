@@ -45,14 +45,14 @@ export default function Index() {
 
 const styles = StyleSheet.create({
 
-/* main screen */
+// main screen
   container: {
     flex: 1,
     backgroundColor: "#fff",
     minHeight: "100%"
   },
 
-/* header */
+// header 
   Shopping_listHeader: {
     width: "100%",
     paddingVertical: 15,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
-/* footer */
+// footer 
   footer: {
     position: "absolute",
     bottom: 50,
