@@ -5,20 +5,29 @@ export default function LocationsHeader() {
   const router = useRouter();
 
   return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.backText}>Back</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.headerText}>Locations</Text>
+        <Text style={styles.headerText}>Locations</Text>
 
-      {/* spacer to balance layout */}
-      <View style={{ width: 50 }} />
+        {/* spacer to balance layout */}
+        <View style={{ width: 50 }} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  /* container */
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  /* header */
   header: {
     width: "100%",
     paddingVertical: 15,

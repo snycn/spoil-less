@@ -10,7 +10,8 @@ export default function Index() {
       <View style={styles.notificationBar}>
         <Text style={styles.notificationText}>Notification</Text>
         <TouchableOpacity>
-          <Text style={styles.viewText}>view </Text>
+          <Text style={styles.viewText}
+          onPress={() => router.push("/expiring-soon")}>view </Text>
         </TouchableOpacity>
       </View>
 
