@@ -46,7 +46,10 @@ export default function Index() {
 
         <View style={styles.separator} />
 
-        <TouchableOpacity style={styles.footerItem}>
+        <TouchableOpacity 
+          style={styles.footerItem}
+          onPress={() => router.push("/settings/setting_index")}
+          >
           <Text style={styles.footerText}>Settings</Text>
         </TouchableOpacity>
 
@@ -63,28 +66,12 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-/* Floating Add Button */
-floatingBtn: {
-  position: "absolute",
-  bottom: 80,
-  right: 25,
-  width: 60,
-  height: 60,
-  borderRadius: 30,
-  backgroundColor: "#007bff",
-  justifyContent: "center",
-  alignItems: "center",
-  elevation: 6,
-},
-plus: {
-  color: "white",
-  fontSize: 32,
-  marginTop: -2,
-},
+  
 /* main screen */
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    minHeight: "100%"
   },
 
   // Notification Bar
@@ -124,10 +111,30 @@ plus: {
     fontSize: 20,
     fontWeight: "700",
   },
+
+/* Floating Add Button */
+floatingBtn: {
+  position: "absolute",
+  bottom: 130,
+  right: 25,
+  width: 60,
+  height: 60,
+  borderRadius: 30,
+  backgroundColor: "#007bff",
+  justifyContent: "center",
+  alignItems: "center",
+  elevation: 6,
+},
+plus: {
+  color: "white",
+  fontSize: 32,
+  marginTop: -2,
+},
+
 /* footer */
   footer: {
     position: "absolute",
-    bottom: 0,
+    bottom: 50,
     width: "100%",
     height: 60,
     backgroundColor: "#f2f2f2",

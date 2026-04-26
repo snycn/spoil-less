@@ -6,9 +6,8 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-
-      <View style={styles.Shopping_listHeader}>
-        <Text style={styles.Shopping_listHeaderText}>Shopping List</Text>
+      <View style={styles.settingsHeader}>
+        <Text style={styles.settingsHeaderText}>Settings</Text>
       </View>
 
       <View style={styles.footer}>
@@ -31,7 +30,7 @@ export default function Index() {
 
         <View style={styles.separator} />
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.footerItem}
           onPress={() => router.push("/settings/setting_index")}
           >
@@ -51,9 +50,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     minHeight: "100%"
   },
-
 /* header */
-  Shopping_listHeader: {
+  settingsHeader: {
     width: "100%",
     paddingVertical: 15,
     backgroundColor: "#f5f5f5",
@@ -62,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  Shopping_listHeaderText: {
+  settingsHeaderText: {
     fontSize: 22,
     fontWeight: "700",
     color: "#333",
