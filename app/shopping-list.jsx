@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function Index() {
+export default function ShoppingList() {
   const router = useRouter();
 
   return (

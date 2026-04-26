@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 // container + header with back
-export default function ExpiringHeader() {
+export default function ExpiringSoon() {
   const router = useRouter();
 
   return (

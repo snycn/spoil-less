@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function LocationsHeader() {
+export default function Locations() {
   const router = useRouter();
 
   return (

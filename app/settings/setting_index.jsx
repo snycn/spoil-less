@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 
-export default function Index() {
+export default function Setting_Index() {
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
