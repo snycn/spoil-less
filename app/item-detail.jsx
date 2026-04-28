@@ -1,6 +1,6 @@
+import { deleteFoodItem, getFoodItemById, markAsDiscarded, markAsUsed } from "@/src/repositories/foodItemRepository";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { deleteFoodItem, getFoodItemById, markAsDiscarded, markAsUsed } from "@/src/repositories/foodItemRepository";
 
 export default function ItemDetail() {
   const router = useRouter();
@@ -27,18 +27,18 @@ export default function ItemDetail() {
         <View style={{ width: 50 }} />
       </View>
 
-      {!item ? <Text style={{ padding: 20, color: "#888" }}>Item not found.</Text> : (
-        <ScrollView contentContainerStyle={{ padding: 20 }}>
-          <Text style={{ fontSize: 22, fontWeight: "700", marginBottom: 12 }}>{item.name}</Text>
-          <Text style={{ fontSize: 16, marginBottom: 8 }}>Expires: {item.expirationDate}</Text>
-          {item.note ? <Text style={{ fontSize: 16, marginBottom: 8 }}>Note: {item.note}</Text> : null}
+      {!item ? <Text style={styles.notFound}>Item not found.</Text> : (
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.field}>Expires: {item.expirationDate}</Text>
+          {item.note ? <Text style={styles.field}>Note: {item.note}</Text> : null}
 
-          <View style={{ flexDirection: "row", gap: 10, marginTop: 24 }}>
-            <TouchableOpacity onPress={handleUsed}    style={{ flex: 1, backgroundColor: "#28a745", padding: 14, borderRadius: 10, alignItems: "center" }}><Text style={{ color: "#fff", fontWeight: "700" }}>Mark as used</Text></TouchableOpacity>
-            <TouchableOpacity onPress={handleDiscard} style={{ flex: 1, backgroundColor: "#fd7e14", padding: 14, borderRadius: 10, alignItems: "center" }}><Text style={{ color: "#fff", fontWeight: "700" }}>Discard</Text></TouchableOpacity>
+          <View style={styles.actionRow}>
+            <TouchableOpacity onPress={handleUsed}    style={styles.btnUsed}><Text style={styles.btnText}>Mark as used</Text></TouchableOpacity>
+            <TouchableOpacity onPress={handleDiscard} style={styles.btnDiscard}><Text style={styles.btnText}>Discard</Text></TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={handleDelete} style={{ marginTop: 12, backgroundColor: "#b30000", padding: 14, borderRadius: 10, alignItems: "center" }}>
-            <Text style={{ color: "#fff", fontWeight: "700" }}>Delete item</Text>
+          <TouchableOpacity onPress={handleDelete} style={styles.btnDelete}>
+            <Text style={styles.btnText}>Delete item</Text>
           </TouchableOpacity>
         </ScrollView>
       )}
@@ -77,4 +77,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#333",
   },
+
+  notFound: { padding: 20, color: "#888" },
+  content: { padding: 20 },
+  itemName: { fontSize: 22, fontWeight: "700", marginBottom: 12 },
+  field: { fontSize: 16, marginBottom: 8 },
+  actionRow: { flexDirection: "row", gap: 10, marginTop: 24 },
+  btnUsed:    { flex: 1, backgroundColor: "#28a745", padding: 14, borderRadius: 10, alignItems: "center" },
+  btnDiscard: { flex: 1, backgroundColor: "#fd7e14", padding: 14, borderRadius: 10, alignItems: "center" },
+  btnDelete:  { marginTop: 12, backgroundColor: "#b30000", padding: 14, borderRadius: 10, alignItems: "center" },
+  btnText:    { color: "#fff", fontWeight: "700" },
 });

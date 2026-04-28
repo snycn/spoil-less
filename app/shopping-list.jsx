@@ -1,7 +1,7 @@
+import { addShoppingListItem, getShoppingList, removeShoppingListItem } from "@/src/repositories/shoppingListRepository";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { addShoppingListItem, getShoppingList, removeShoppingListItem } from "@/src/repositories/shoppingListRepository";
 
 export default function ShoppingList() {
   const router = useRouter();
@@ -27,25 +27,25 @@ export default function ShoppingList() {
         <Text style={styles.Shopping_listHeaderText}>Shopping List</Text>
       </View>
 
-      <View style={{ flexDirection: "row", padding: 12, gap: 8, borderBottomWidth: 1, borderColor: "#ddd" }}>
-        <TextInput style={{ flex: 1, backgroundColor: "#eee", padding: 10, borderRadius: 8, fontSize: 16 }}
+      <View style={styles.addRow}>
+        <TextInput style={styles.addInput}
           placeholder="Add item..." value={newName} onChangeText={setNewName} onSubmitEditing={handleAdd} />
-        <TouchableOpacity style={{ backgroundColor: "#007bff", paddingHorizontal: 16, borderRadius: 8, justifyContent: "center" }} onPress={handleAdd}>
-          <Text style={{ color: "#fff", fontWeight: "700" }}>Add</Text>
+        <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
+          <Text style={styles.addBtnText}>Add</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 130 }}>
-        {items.length === 0 && <Text style={{ color: "#888" }}>Nothing on the list.</Text>}
+      <ScrollView contentContainerStyle={styles.listContent}>
+        {items.length === 0 && <Text style={styles.emptyText}>Nothing on the list.</Text>}
         {items.map((item) => (
-          <View key={item.id} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 12, borderBottomWidth: 1, borderColor: "#eee" }}>
-            <Text style={{ fontSize: 16 }}>{item.name}</Text>
-            <View style={{ flexDirection: "row", gap: 12 }}>
+          <View key={item.id} style={styles.itemRow}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <View style={styles.itemActions}>
               <TouchableOpacity onPress={() => router.push({ pathname: '/add-item', params: { prefillName: item.name } })}>
-                <Text style={{ color: "#007bff", fontWeight: "600" }}>Move to tracking</Text>
+                <Text style={styles.moveText}>Move to tracking</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => { removeShoppingListItem(item.id); loadData(); }}>
-                <Text style={{ color: "#b30000", fontWeight: "700" }}>✕</Text>
+                <Text style={styles.removeText}>✕</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -72,7 +72,7 @@ export default function ShoppingList() {
 
         <View style={styles.separator} />
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.footerItem}
           onPress={() => router.push("/settings/setting_index")}
           >
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     minHeight: "100%"
   },
 
-// header 
+// header
   Shopping_listHeader: {
     width: "100%",
     paddingVertical: 15,
@@ -109,7 +109,65 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
-// footer 
+  // add row
+  addRow: {
+    flexDirection: "row",
+    padding: 12,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  addInput: {
+    flex: 1,
+    backgroundColor: "#eee",
+    padding: 10,
+    borderRadius: 8,
+    fontSize: 16,
+  },
+  addBtn: {
+    backgroundColor: "#007bff",
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: "center",
+  },
+  addBtnText: {
+    color: "#fff",
+    fontWeight: "700",
+  },
+
+  // list
+  listContent: {
+    padding: 16,
+    paddingBottom: 130,
+  },
+  emptyText: {
+    color: "#888",
+  },
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+  },
+  itemName: {
+    fontSize: 16,
+  },
+  itemActions: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  moveText: {
+    color: "#007bff",
+    fontWeight: "600",
+  },
+  removeText: {
+    color: "#b30000",
+    fontWeight: "700",
+  },
+
+// footer
   footer: {
     position: "absolute",
     bottom: 50,

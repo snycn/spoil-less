@@ -35,27 +35,27 @@ export default function Locations() {
         <Text style={styles.headerText}>Locations</Text>
 
         {/* spacer to balance layout */}
-        <View style={{ width: 50 }} />
+        <View style={styles.spacer} />
       </View>
 
-      <View style={{ flexDirection: "row", padding: 12, gap: 8, borderBottomWidth: 1, borderColor: "#ddd" }}>
-        <TextInput style={{ flex: 1, backgroundColor: "#eee", padding: 10, borderRadius: 8, fontSize: 16 }}
+      <View style={styles.addRow}>
+        <TextInput style={styles.addInput}
           placeholder="New location name..." value={newName} onChangeText={setNewName} onSubmitEditing={handleAdd} />
-        <TouchableOpacity style={{ backgroundColor: "#007bff", paddingHorizontal: 16, borderRadius: 8, justifyContent: "center" }} onPress={handleAdd}>
-          <Text style={{ color: "#fff", fontWeight: "700" }}>Add</Text>
+        <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
+          <Text style={styles.addBtnText}>Add</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
-        {locations.length === 0 && <Text style={{ color: "#888" }}>No locations yet.</Text>}
+      <ScrollView contentContainerStyle={styles.listContent}>
+        {locations.length === 0 && <Text style={styles.emptyText}>No locations yet.</Text>}
         {locations.map((loc) => (
-          <View key={loc.id} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 14, borderBottomWidth: 1, borderColor: "#eee" }}>
+          <View key={loc.id} style={styles.locRow}>
             <View>
-              <Text style={{ fontSize: 16, fontWeight: "600" }}>{loc.name}</Text>
-              <Text style={{ fontSize: 13, color: "#888" }}>{getActiveItemCount(loc.id)} item(s)</Text>
+              <Text style={styles.locName}>{loc.name}</Text>
+              <Text style={styles.locCount}>{getActiveItemCount(loc.id)} item(s)</Text>
             </View>
             <TouchableOpacity onPress={() => handleDelete(loc)}>
-              <Text style={{ color: "#b30000", fontWeight: "600" }}>Delete</Text>
+              <Text style={styles.deleteText}>Delete</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -94,5 +94,63 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     color: "#333",
+  },
+
+  spacer: {
+    width: 50,
+  },
+
+  // add row
+  addRow: {
+    flexDirection: "row",
+    padding: 12,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  addInput: {
+    flex: 1,
+    backgroundColor: "#eee",
+    padding: 10,
+    borderRadius: 8,
+    fontSize: 16,
+  },
+  addBtn: {
+    backgroundColor: "#007bff",
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: "center",
+  },
+  addBtnText: {
+    color: "#fff",
+    fontWeight: "700",
+  },
+
+  // list
+  listContent: {
+    padding: 16,
+  },
+  emptyText: {
+    color: "#888",
+  },
+  locRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+  },
+  locName: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  locCount: {
+    fontSize: 13,
+    color: "#888",
+  },
+  deleteText: {
+    color: "#b30000",
+    fontWeight: "600",
   },
 });

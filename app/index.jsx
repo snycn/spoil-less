@@ -1,8 +1,8 @@
+import { getActiveFoodItems, getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
+import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { getActiveFoodItems, getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
-import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 
 export default function Index() {
   const router = useRouter();
@@ -39,8 +39,8 @@ export default function Index() {
       </View>
 
       {/* Items grouped by storage location */}
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 130 }}>
-        {items.length === 0 && <Text style={{ color: "#888", textAlign: "center", marginTop: 40 }}>No items yet. Tap + to add one.</Text>}
+      <ScrollView style={styles.itemList} contentContainerStyle={styles.itemListContent}>
+        {items.length === 0 && <Text style={styles.emptyText}>No items yet. Tap + to add one.</Text>}
         {locations.map((loc) => {
           const locItems = items.filter(i => i.storageLocationId === loc.id);
           if (locItems.length === 0) return null;
@@ -49,16 +49,17 @@ export default function Index() {
               <Text style={styles.sectionHeader}>{loc.name}</Text>
               {locItems.map((item) => (
                 <TouchableOpacity key={item.id}
-                  style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 12, paddingHorizontal: 15, borderBottomWidth: 1, borderColor: "#eee" }}
+                  style={styles.itemRow}
                   onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}>
-                  <Text style={{ fontSize: 16 }}>{item.name}</Text>
-                  <Text style={{ fontSize: 14, color: "#888" }}>{item.expirationDate}</Text>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.itemExpiry}>{item.expirationDate}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           );
         })}
       </ScrollView>
+
       {/* Footer */}
       <View style={styles.footer}>
 
@@ -80,7 +81,7 @@ export default function Index() {
 
         <View style={styles.separator} />
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.footerItem}
           onPress={() => router.push("/settings/setting_index")}
           >
@@ -100,7 +101,7 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  
+
 //main screen
   container: {
     flex: 1,
@@ -146,6 +147,34 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
+  // Item list
+  itemList: {
+    flex: 1,
+  },
+  itemListContent: {
+    paddingBottom: 130,
+  },
+  emptyText: {
+    color: "#888",
+    textAlign: "center",
+    marginTop: 40,
+  },
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+  },
+  itemName: {
+    fontSize: 16,
+  },
+  itemExpiry: {
+    fontSize: 14,
+    color: "#888",
+  },
+
 // Floating Add Button
 floatingBtn: {
   position: "absolute",
@@ -165,7 +194,7 @@ plus: {
   marginTop: -2,
 },
 
-// footer 
+// footer
   footer: {
     position: "absolute",
     bottom: 50,
