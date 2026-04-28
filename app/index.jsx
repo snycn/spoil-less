@@ -1,14 +1,28 @@
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getActiveFoodItems, getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
+import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 
 export default function Index() {
   const router = useRouter();
+  const [items, setItems] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [expiringSoonCount, setExpiringSoonCount] = useState(0);
+
+  useFocusEffect(useCallback(() => {
+      setItems(getActiveFoodItems());
+      setLocations(getStorageLocations());
+      setExpiringSoonCount(getExpiringSoonItems(7).length);
+  }, []));
 
   return (
     <View style={styles.container}>
       {/* Top Notification Bar */}
       <View style={styles.notificationBar}>
-        <Text style={styles.notificationText}>Notification</Text>
+        <Text style={styles.notificationText}>
+          {expiringSoonCount > 0 ? `${expiringSoonCount} item(s) expiring soon` : 'No items expiring soon'}
+        </Text>
         <TouchableOpacity>
           <Text style={styles.viewText}
           onPress={() => router.push("/expiring-soon")}>view </Text>
@@ -24,8 +38,27 @@ export default function Index() {
         <TouchableOpacity><Text style={styles.filterText}>date</Text></TouchableOpacity>
       </View>
 
-      {/* Section Header: Fridge */}
-      <Text style={styles.sectionHeader}>Fridge</Text>
+      {/* Items grouped by storage location */}
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 130 }}>
+        {items.length === 0 && <Text style={{ color: "#888", textAlign: "center", marginTop: 40 }}>No items yet. Tap + to add one.</Text>}
+        {locations.map((loc) => {
+          const locItems = items.filter(i => i.storageLocationId === loc.id);
+          if (locItems.length === 0) return null;
+          return (
+            <View key={loc.id}>
+              <Text style={styles.sectionHeader}>{loc.name}</Text>
+              {locItems.map((item) => (
+                <TouchableOpacity key={item.id}
+                  style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 12, paddingHorizontal: 15, borderBottomWidth: 1, borderColor: "#eee" }}
+                  onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}>
+                  <Text style={{ fontSize: 16 }}>{item.name}</Text>
+                  <Text style={{ fontSize: 14, color: "#888" }}>{item.expirationDate}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          );
+        })}
+      </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
 

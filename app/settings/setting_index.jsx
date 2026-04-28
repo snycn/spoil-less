@@ -1,10 +1,24 @@
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { db } from "@/src/database/DatabaseManager";
+import { cancelAllNotifications, rescheduleAll, sendTestNotification } from "@/src/services/notificationScheduler";
 
 export default function Setting_Index() {
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [daysBefore, setDaysBefore] = useState(3);
+
+  useFocusEffect(useCallback(() => {
+      const prefs = db.getFirstSync('SELECT enabled, daysBefore FROM notification_preferences WHERE id = 1');
+      if (prefs) { setNotificationsEnabled(!!prefs.enabled); setDaysBefore(prefs.daysBefore); }
+  }, []));
+
+  const handleToggle = (value) => {
+      setNotificationsEnabled(value);
+      db.runSync('UPDATE notification_preferences SET enabled = ? WHERE id = 1', [value ? 1 : 0]);
+      if (value) rescheduleAll(); else cancelAllNotifications();
+  };
 
   return (
     <View style={styles.container}>
@@ -22,15 +36,12 @@ export default function Setting_Index() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Enable notifications</Text>
-          <Switch
-            value={notificationsEnabled}
-            onValueChange={setNotificationsEnabled}
-          />
+          <Switch value={notificationsEnabled} onValueChange={handleToggle} />
         </View>
 
         <View style={styles.row}>
           <Text style={styles.label}>Days before expiry</Text>
-          <Text style={styles.valueBox}>3</Text>
+          <Text style={styles.valueBox}>{daysBefore}</Text>
         </View>
 
         {/* expiring soon */}
@@ -41,23 +52,13 @@ export default function Setting_Index() {
           <Text style={styles.valueBox}>3</Text>
         </View>
 
-        {/* profile */}
-        <Text style={styles.sectionTitle}>Profile</Text>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Current profile</Text>
-          <Text style={styles.valueBox}>My Kitchen</Text>
-        </View>
-
-        <TouchableOpacity style={styles.button}
-        onPress={() => router.push("/settings/profiles")}
-        >
-          <Text style={styles.buttonText}>Manage Profiles</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity style={styles.button}
         onPress={() => router.push("/settings/locations")}>
           <Text style={styles.buttonText}>Manage Storage Locations</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={() => sendTestNotification(5)}>
+          <Text style={styles.buttonText}>Send test notification (5s)</Text>
         </TouchableOpacity>
 
       </View>
