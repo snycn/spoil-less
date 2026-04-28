@@ -40,7 +40,8 @@ export default function Locations() {
 
       <View style={styles.addRow}>
         <TextInput style={styles.addInput}
-          placeholder="New location name..." value={newName} onChangeText={setNewName} onSubmitEditing={handleAdd} />
+          placeholder="New location name..."
+          placeholderTextColor="#666" value={newName} onChangeText={setNewName} onSubmitEditing={handleAdd} />
         <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
           <Text style={styles.addBtnText}>Add</Text>
         </TouchableOpacity>
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     fontSize: 16,
+    color: "#f0f0f0",
   },
   addBtn: {
     backgroundColor: "#007bff",
@@ -144,6 +146,7 @@ const styles = StyleSheet.create({
   locName: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#d0d0d0",
   },
   locCount: {
     fontSize: 13,

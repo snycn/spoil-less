@@ -84,6 +84,7 @@ export default function AddItemScreen() {
         <TextInput
           style={styles.input}
           placeholder="Enter item name..."
+          placeholderTextColor="#666"
           value={name}
           onChangeText={setName}
         />
@@ -93,6 +94,7 @@ export default function AddItemScreen() {
         <TextInput
           style={styles.input}
           placeholder="YYYY-MM-DD (optional — leave blank for default)"
+          placeholderTextColor="#666"
           value={expiration}
           onChangeText={(text) => setExpiration(formatDateInput(text))}
           keyboardType="numeric"
@@ -122,6 +124,7 @@ export default function AddItemScreen() {
         <TextInput
           style={styles.input}
           placeholder="Select a category..."
+          placeholderTextColor="#666"
           value={category}
           onChangeText={setCategory}
         />
@@ -131,6 +134,7 @@ export default function AddItemScreen() {
         <TextInput
           style={[styles.input, { height: 80 }]}
           placeholder="Enter a note..."
+          placeholderTextColor="#666"
           value={note}
           onChangeText={setNote}
           multiline
@@ -207,6 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 16,
     marginBottom: 4,
+    color: "#f0f0f0",
   },
 
   locationOption: {

@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 20,
     fontWeight: "700",
+    color: "#d0d0d0",
   },
 
   // Item list
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
+    color: "#f0f0f0",
   },
   itemExpiry: {
     fontSize: 14,

@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
+    color: "#f0f0f0",
   },
   itemLabel: {
     color: "#ff6b6b",
