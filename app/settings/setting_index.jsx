@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   // main container
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
     minHeight: "100%",
   },
 
@@ -110,16 +110,16 @@ const styles = StyleSheet.create({
   settingsHeader: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     alignItems: "center",
   },
 
   settingsHeaderText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   // content
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginTop: 25,
     marginBottom: 10,
+    color: "#f0f0f0",
   },
 
   row: {
@@ -144,20 +145,21 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 16,
+    color: "#f0f0f0",
   },
 
   valueBox: {
     fontSize: 16,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: "#eee",
+    backgroundColor: "#2e2e2e",
     borderRadius: 6,
   },
 
   button: {
     marginTop: 10,
     paddingVertical: 12,
-    backgroundColor: "#ddd",
+    backgroundColor: "#3a3a3a",
     borderRadius: 8,
   },
 
@@ -165,6 +167,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontWeight: "600",
+    color: "#f0f0f0",
   },
 
   // footer
@@ -173,9 +176,9 @@ const styles = StyleSheet.create({
     bottom: 50,
     width: "100%",
     height: 60,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#242424",
     borderTopWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -188,12 +191,12 @@ const styles = StyleSheet.create({
 
   footerText: {
     fontSize: 16,
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   separator: {
     width: 1,
     height: "60%",
-    backgroundColor: "#ccc",
+    backgroundColor: "#555",
   },
 });

@@ -155,7 +155,7 @@ export default function AddItemScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
   },
 
   // header
@@ -163,9 +163,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   // form
@@ -192,16 +192,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 15,
     marginBottom: 5,
+    color: "#f0f0f0",
   },
 
   hint: {
     fontSize: 14,
-    color: "#888",
+    color: "#999",
     marginBottom: 8,
   },
 
   input: {
-    backgroundColor: "#eee",
+    backgroundColor: "#2e2e2e",
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
   photoButton: {
     marginTop: 20,
     padding: 14,
-    backgroundColor: "#ddd",
+    backgroundColor: "#3a3a3a",
     borderRadius: 10,
     alignItems: "center",
   },
@@ -232,6 +233,7 @@ const styles = StyleSheet.create({
   photoText: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#f0f0f0",
   },
 
   saveButton: {

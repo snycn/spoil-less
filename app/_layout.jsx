@@ -7,7 +7,7 @@ initializeDatabase();
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#1a1a1a" }} edges={["top"]}>
         <Stack screenOptions={{ headerShown: false }} />
       </SafeAreaView>
     </SafeAreaProvider>

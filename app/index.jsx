@@ -105,24 +105,24 @@ const styles = StyleSheet.create({
 //main screen
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
     minHeight: "100%"
   },
 
   // Notification Bar
   notificationBar: {
-    backgroundColor: "#ffdddd",
+    backgroundColor: "#3d0000",
     padding: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   notificationText: {
-    color: "#b30000",
+    color: "#ff6b6b",
     fontWeight: "600",
   },
   viewText: {
-    color: "#b30000",
+    color: "#ff6b6b",
     fontWeight: "700",
   },
 
@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-around",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
   },
   filterText: {
     fontSize: 16,
-    color: "#444",
+    color: "#bbb",
   },
 
   // Section Header
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     paddingBottom: 130,
   },
   emptyText: {
-    color: "#888",
+    color: "#999",
     textAlign: "center",
     marginTop: 40,
   },
@@ -165,14 +165,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderColor: "#2e2e2e",
   },
   itemName: {
     fontSize: 16,
   },
   itemExpiry: {
     fontSize: 14,
-    color: "#888",
+    color: "#999",
   },
 
 // Floating Add Button
@@ -200,9 +200,9 @@ plus: {
     bottom: 50,
     width: "100%",
     height: 60,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#242424",
     borderTopWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -215,12 +215,12 @@ plus: {
 
   footerText: {
     fontSize: 16,
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   separator: {
     width: 1,
     height: "60%",
-    backgroundColor: "#ccc",
+    backgroundColor: "#555",
   },
 });

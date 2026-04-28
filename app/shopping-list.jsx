@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 // main screen
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
     minHeight: "100%"
   },
 
@@ -97,16 +97,16 @@ const styles = StyleSheet.create({
   Shopping_listHeader: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     alignItems: "center",
   },
 
   Shopping_listHeaderText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   // add row
@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 8,
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
   },
   addInput: {
     flex: 1,
-    backgroundColor: "#eee",
+    backgroundColor: "#2e2e2e",
     padding: 10,
     borderRadius: 8,
     fontSize: 16,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     paddingBottom: 130,
   },
   emptyText: {
-    color: "#888",
+    color: "#999",
   },
   itemRow: {
     flexDirection: "row",
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderColor: "#2e2e2e",
   },
   itemName: {
     fontSize: 16,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   removeText: {
-    color: "#b30000",
+    color: "#ff6b6b",
     fontWeight: "700",
   },
 
@@ -173,9 +173,9 @@ const styles = StyleSheet.create({
     bottom: 50,
     width: "100%",
     height: 60,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#242424",
     borderTopWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
 
   footerText: {
     fontSize: 16,
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   separator: {
     width: 1,
     height: "60%",
-    backgroundColor: "#ccc",
+    backgroundColor: "#555",
   },
 });

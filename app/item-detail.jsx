@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   /* container */
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
   },
 
   /* header */
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: "#f0f0f0",
   },
 
-  notFound: { padding: 20, color: "#888" },
+  notFound: { padding: 20, color: "#999" },
   content: { padding: 20 },
-  itemName: { fontSize: 22, fontWeight: "700", marginBottom: 12 },
-  field: { fontSize: 16, marginBottom: 8 },
+  itemName: { fontSize: 22, fontWeight: "700", marginBottom: 12, color: "#f0f0f0" },
+  field: { fontSize: 16, marginBottom: 8, color: "#f0f0f0" },
   actionRow: { flexDirection: "row", gap: 10, marginTop: 24 },
   btnUsed:    { flex: 1, backgroundColor: "#28a745", padding: 14, borderRadius: 10, alignItems: "center" },
   btnDiscard: { flex: 1, backgroundColor: "#fd7e14", padding: 14, borderRadius: 10, alignItems: "center" },

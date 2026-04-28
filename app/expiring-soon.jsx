@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   /* container */
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
   },
 
   /* header */
@@ -54,9 +54,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: "#f0f0f0",
   },
 
   spacer: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   emptyText: {
-    color: "#888",
+    color: "#999",
     marginTop: 20,
   },
   itemRow: {
@@ -92,14 +92,14 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a3a",
     borderRadius: 8,
   },
   itemName: {
     fontSize: 16,
   },
   itemLabel: {
-    color: "#b30000",
+    color: "#ff6b6b",
     fontWeight: "600",
   },
 });
