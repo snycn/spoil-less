@@ -1,5 +1,6 @@
 import { getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
 import { getDaysUntilExpiration } from "@/src/services/expirationService";
+import { db } from "@/src/database/DatabaseManager";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -9,7 +10,10 @@ export default function ExpiringSoon() {
   const router = useRouter();
   const [items, setItems] = useState([]);
 
-  useFocusEffect(useCallback(() => { setItems(getExpiringSoonItems(7)); }, []));
+  useFocusEffect(useCallback(() => {
+    const prefs = db.getFirstSync('SELECT expiryThreshold FROM notification_preferences WHERE id = 1');
+    setItems(getExpiringSoonItems(prefs?.expiryThreshold ?? 3));
+  }, []));
 
   return (
     <View style={styles.container}>
