@@ -93,7 +93,7 @@ export default function AddItemScreen() {
         <Text style={styles.label}>Expiration date</Text>
         <TextInput
           style={styles.input}
-          placeholder="YYYY-MM-DD (optional — leave blank for default)"
+          placeholder="YYYY-MM-DD (optional)"
           placeholderTextColor="#666"
           value={expiration}
           onChangeText={(text) => setExpiration(formatDateInput(text))}
@@ -117,7 +117,7 @@ export default function AddItemScreen() {
                     style={[styles.input, styles.locationOption, selectedLocationId === loc.id && styles.locationSelected]}
                     onPress={() => setSelectedLocationId(loc.id)}
                 >
-                    <Text style={selectedLocationId === loc.id ? styles.locationSelectedText : {}}>
+                    <Text style={selectedLocationId === loc.id ? styles.locationSelectedText : styles.locationText}>
                         {selectedLocationId === loc.id ? '✓  ' : ''}{loc.name}
                     </Text>
                 </TouchableOpacity>
@@ -248,6 +248,11 @@ const styles = StyleSheet.create({
 
   locationSelected: {
     backgroundColor: "#007bff",
+  },
+
+  locationText: {
+    color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
 
   locationSelectedText: {
