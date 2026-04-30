@@ -1,5 +1,6 @@
 import { getActiveFoodItems, getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
+import { db } from "@/src/database/DatabaseManager";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -13,7 +14,8 @@ export default function Index() {
   useFocusEffect(useCallback(() => {
       setItems(getActiveFoodItems());
       setLocations(getStorageLocations());
-      setExpiringSoonCount(getExpiringSoonItems(7).length);
+      const prefs = db.getFirstSync('SELECT expiryThreshold FROM notification_preferences WHERE id = 1');
+      setExpiringSoonCount(getExpiringSoonItems(prefs?.expiryThreshold ?? 3).length);
   }, []));
 
   return (
