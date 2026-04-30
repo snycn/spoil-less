@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   // main container
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
     minHeight: "100%",
   },
 
@@ -110,15 +110,15 @@ const styles = StyleSheet.create({
   settingsHeader: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#242424",
+    backgroundColor: "#1C262E",
     borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
     alignItems: "center",
   },
 
   settingsHeaderText: {
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
   },
 
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontSize: 20,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     marginTop: 25,
     marginBottom: 10,
     color: "#f0f0f0",
@@ -146,27 +146,29 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
 
   valueBox: {
     fontSize: 16,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: "#2e2e2e",
+    backgroundColor: "#24323D",
     borderRadius: 6,
+    fontFamily: "Poppins_400Regular",
   },
 
   button: {
     marginTop: 10,
     paddingVertical: 12,
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "#2D3848",
     borderRadius: 8,
   },
 
   buttonText: {
     textAlign: "center",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#f0f0f0",
   },
 
@@ -174,11 +176,11 @@ const styles = StyleSheet.create({
   footer: {
     position: "absolute",
     bottom: 50,
-    width: "100%",
+    left: 14,
+    right: 14,
     height: 60,
-    backgroundColor: "#242424",
-    borderTopWidth: 1,
-    borderColor: "#3a3a3a",
+    backgroundColor: "#1C262E",
+    borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -192,11 +194,12 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   separator: {
     width: 1,
     height: "60%",
-    backgroundColor: "#555",
+    backgroundColor: "#32404D",
   },
 });

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   /* container */
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
   },
 
   /* header */
@@ -54,9 +54,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#242424",
+    backgroundColor: "#1C262E",
     borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -66,11 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#007bff",
     width: 50,
+    fontFamily: "Poppins_400Regular",
   },
 
   headerText: {
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
   },
 
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: "#999",
     marginTop: 20,
+    fontFamily: "Poppins_400Regular",
   },
   itemRow: {
     flexDirection: "row",
@@ -92,15 +94,16 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
     borderRadius: 8,
   },
   itemName: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
   itemLabel: {
     color: "#ff6b6b",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
 });

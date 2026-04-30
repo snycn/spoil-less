@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 // main screen
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
     minHeight: "100%"
   },
 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   Shopping_listHeader: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#242424",
+    backgroundColor: "#1C262E",
     borderBottomWidth: 1,
     borderColor: "#3a3a3a",
     alignItems: "center",
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
 
   Shopping_listHeaderText: {
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
   },
 
@@ -115,16 +115,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 12,
     gap: 8,
-    borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
   },
   addInput: {
     flex: 1,
-    backgroundColor: "#2e2e2e",
+    backgroundColor: "#24323D",
     padding: 10,
     borderRadius: 8,
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
   addBtn: {
     backgroundColor: "#007bff",
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
   },
   addBtnText: {
     color: "#fff",
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
   },
 
   // list
@@ -144,18 +143,22 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: "#999",
+    fontFamily: "Poppins_400Regular",
   },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: "#2e2e2e",
+    paddingHorizontal: 14,
+    marginBottom: 8,
+    backgroundColor: "#1C262E",
+    borderRadius: 12,
   },
   itemName: {
     fontSize: 16,
     color: "#d0d0d0",
+    fontFamily: "Poppins_400Regular",
   },
   itemActions: {
     flexDirection: "row",
@@ -163,22 +166,22 @@ const styles = StyleSheet.create({
   },
   moveText: {
     color: "#007bff",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
   removeText: {
     color: "#ff6b6b",
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
   },
 
 // footer
   footer: {
     position: "absolute",
     bottom: 50,
-    width: "100%",
+    left: 14,
+    right: 14,
     height: 60,
-    backgroundColor: "#242424",
-    borderTopWidth: 1,
-    borderColor: "#3a3a3a",
+    backgroundColor: "#1C262E",
+    borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -192,11 +195,12 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   separator: {
     width: 1,
     height: "60%",
-    backgroundColor: "#555",
+    backgroundColor: "#32404D",
   },
 });

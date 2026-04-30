@@ -52,7 +52,7 @@ export default function Index() {
                   style={styles.itemRow}
                   onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}>
                   <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemExpiry}>{item.expirationDate}</Text>
+                  <Text style={styles.itemExpiry}>Expires on: {item.expirationDate}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -105,38 +105,44 @@ const styles = StyleSheet.create({
 //main screen
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
     minHeight: "100%"
   },
 
   // Notification Bar
   notificationBar: {
-    backgroundColor: "#3d0000",
+    backgroundColor: "#351A20",
     padding: 12,
+    marginHorizontal: 14,
+    marginTop: 14,
+    borderRadius: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   notificationText: {
     color: "#ff6b6b",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
   viewText: {
     color: "#ff6b6b",
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
   },
 
   // Filters
   filterRow: {
     flexDirection: "row",
     padding: 10,
+    marginHorizontal: 14,
+    marginTop: 10,
+    borderRadius: 12,
+    backgroundColor: "#1C262E",
     justifyContent: "space-around",
-    borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
   },
   filterText: {
     fontSize: 16,
     color: "#bbb",
+    fontFamily: "Poppins_400Regular",
   },
 
   // Section Header
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 15,
     fontSize: 20,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#d0d0d0",
   },
 
@@ -159,22 +165,27 @@ const styles = StyleSheet.create({
     color: "#999",
     textAlign: "center",
     marginTop: 40,
+    fontFamily: "Poppins_400Regular",
   },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderColor: "#2e2e2e",
+    marginHorizontal: 14,
+    marginTop: 8,
+    backgroundColor: "#1C262E",
+    borderRadius: 12,
   },
   itemName: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
   },
   itemExpiry: {
     fontSize: 14,
     color: "#999",
+    fontFamily: "Poppins_400Regular",
   },
 
 // Floating Add Button
@@ -200,11 +211,11 @@ plus: {
   footer: {
     position: "absolute",
     bottom: 50,
-    width: "100%",
+    left: 14,
+    right: 14,
     height: 60,
-    backgroundColor: "#242424",
-    borderTopWidth: 1,
-    borderColor: "#3a3a3a",
+    backgroundColor: "#1C262E",
+    borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -218,6 +229,7 @@ plus: {
   footerText: {
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   separator: {

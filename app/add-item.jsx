@@ -104,7 +104,12 @@ export default function AddItemScreen() {
         {/* storage location */}
         <Text style={styles.label}>Storage location</Text>
         {locations.length === 0 ? (
-            <Text style={styles.hint}>No locations yet. Add one in Settings → Manage Storage Locations.</Text>
+            <View style={styles.noLocationsBox}>
+                <Text style={styles.hint}>No locations yet.</Text>
+                <TouchableOpacity style={styles.goToSettingsBtn} onPress={() => router.push("/settings/locations")}>
+                    <Text style={styles.goToSettingsText}>Go to Manage Storage Locations</Text>
+                </TouchableOpacity>
+            </View>
         ) : (
             locations.map((loc) => (
                 <TouchableOpacity
@@ -159,7 +164,7 @@ export default function AddItemScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
   },
 
   // header
@@ -167,9 +172,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#242424",
+    backgroundColor: "#1C262E",
     borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -179,11 +184,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#007bff",
     width: 50,
+    fontFamily: "Poppins_400Regular",
   },
 
   headerText: {
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
   },
 
@@ -197,21 +203,43 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 5,
     color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   hint: {
     fontSize: 14,
     color: "#999",
     marginBottom: 8,
+    fontFamily: "Poppins_400Regular",
+  },
+
+  noLocationsBox: {
+    gap: 8,
+    marginBottom: 8,
+  },
+
+  goToSettingsBtn: {
+    alignSelf: "flex-start",
+    backgroundColor: "#24323D",
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+  },
+
+  goToSettingsText: {
+    color: "#007bff",
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
   },
 
   input: {
-    backgroundColor: "#2e2e2e",
+    backgroundColor: "#24323D",
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
     marginBottom: 4,
     color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
 
   locationOption: {
@@ -224,20 +252,20 @@ const styles = StyleSheet.create({
 
   locationSelectedText: {
     color: "#fff",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   photoButton: {
     marginTop: 20,
     padding: 14,
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "#2D3848",
     borderRadius: 10,
     alignItems: "center",
   },
 
   photoText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#f0f0f0",
   },
 
@@ -252,6 +280,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontSize: 18,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
   },
 });

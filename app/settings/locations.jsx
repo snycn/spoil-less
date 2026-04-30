@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   /* container */
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#151B20",
   },
 
   /* header */
@@ -77,9 +77,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "#242424",
+    backgroundColor: "#1C262E",
     borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -89,11 +89,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#007bff",
     width: 50,
+    fontFamily: "Poppins_400Regular",
   },
 
   headerText: {
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
   },
 
@@ -107,15 +108,16 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 8,
     borderBottomWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#2D3848",
   },
   addInput: {
     flex: 1,
-    backgroundColor: "#2e2e2e",
+    backgroundColor: "#24323D",
     padding: 10,
     borderRadius: 8,
     fontSize: 16,
     color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
   },
   addBtn: {
     backgroundColor: "#007bff",
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
   },
   addBtnText: {
     color: "#fff",
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
   },
 
   // list
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: "#999",
+    fontFamily: "Poppins_400Regular",
   },
   locRow: {
     flexDirection: "row",
@@ -141,19 +144,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderColor: "#2e2e2e",
+    borderColor: "#24323D",
   },
   locName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#d0d0d0",
   },
   locCount: {
     fontSize: 13,
     color: "#999",
+    fontFamily: "Poppins_400Regular",
   },
   deleteText: {
     color: "#ff6b6b",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
 });
