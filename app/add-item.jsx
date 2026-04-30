@@ -9,8 +9,9 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { addFoodItem } from "@/src/repositories/foodItemRepository";
+import { addFoodItem, getAllDefaultItems } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
+import { getDefaultExpirationDate } from "@/src/services/expirationService";
 
 function formatDateInput(text) {
     const digits = text.replace(/\D/g, '').slice(0, 8);
@@ -35,9 +36,11 @@ export default function AddItemScreen() {
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [locations, setLocations] = useState([]);
+  const [defaultItems, setDefaultItems] = useState([]);
 
   useFocusEffect(useCallback(() => {
       setLocations(getStorageLocations());
+      setDefaultItems(getAllDefaultItems());
   }, []));
 
   const handleSave = () => {
@@ -89,6 +92,24 @@ export default function AddItemScreen() {
           onChangeText={setName}
         />
 
+        {/* common items quick-pick */}
+        <Text style={styles.label}>Common items</Text>
+        <ScrollView style={styles.quickList} nestedScrollEnabled>
+          {defaultItems.map((item) => (
+            <TouchableOpacity
+              key={item.itemName}
+              style={styles.quickItem}
+              onPress={() => {
+                setName(item.itemName);
+                setExpiration(getDefaultExpirationDate(item.itemName));
+              }}
+            >
+              <Text style={styles.quickItemName}>{item.itemName}</Text>
+              <Text style={styles.quickItemDays}>{item.defaultDays} days</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
         {/* expiration date */}
         <Text style={styles.label}>Expiration date</Text>
         <TextInput
@@ -103,26 +124,21 @@ export default function AddItemScreen() {
 
         {/* storage location */}
         <Text style={styles.label}>Storage location</Text>
-        {locations.length === 0 ? (
-            <View style={styles.noLocationsBox}>
-                <Text style={styles.hint}>No locations yet.</Text>
-                <TouchableOpacity style={styles.goToSettingsBtn} onPress={() => router.push("/settings/locations")}>
-                    <Text style={styles.goToSettingsText}>Go to Manage Storage Locations</Text>
-                </TouchableOpacity>
-            </View>
-        ) : (
-            locations.map((loc) => (
-                <TouchableOpacity
-                    key={loc.id}
-                    style={[styles.input, styles.locationOption, selectedLocationId === loc.id && styles.locationSelected]}
-                    onPress={() => setSelectedLocationId(loc.id)}
-                >
-                    <Text style={selectedLocationId === loc.id ? styles.locationSelectedText : styles.locationText}>
-                        {selectedLocationId === loc.id ? '✓  ' : ''}{loc.name}
-                    </Text>
-                </TouchableOpacity>
-            ))
-        )}
+        {locations.length === 0 && <Text style={styles.hint}>No locations yet.</Text>}
+        {locations.map((loc) => (
+            <TouchableOpacity
+                key={loc.id}
+                style={[styles.input, styles.locationOption, selectedLocationId === loc.id && styles.locationSelected]}
+                onPress={() => setSelectedLocationId(loc.id)}
+            >
+                <Text style={selectedLocationId === loc.id ? styles.locationSelectedText : styles.locationText}>
+                    {selectedLocationId === loc.id ? '✓  ' : ''}{loc.name}
+                </Text>
+            </TouchableOpacity>
+        ))}
+        <TouchableOpacity style={styles.goToSettingsBtn} onPress={() => router.push("/settings/locations")}>
+            <Text style={styles.goToSettingsText}>Manage Storage Locations</Text>
+        </TouchableOpacity>
 
         {/* category */}
         <Text style={styles.label}>Category (optional)</Text>
@@ -204,6 +220,31 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: "#f0f0f0",
     fontFamily: "Poppins_600SemiBold",
+  },
+
+  quickList: {
+    height: 180,
+    backgroundColor: "#1C2A35",
+    borderRadius: 8,
+    marginBottom: 4,
+  },
+  quickItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderColor: "#253040",
+  },
+  quickItemName: {
+    color: "#f0f0f0",
+    fontFamily: "Poppins_400Regular",
+    fontSize: 15,
+  },
+  quickItemDays: {
+    color: "#999",
+    fontFamily: "Poppins_400Regular",
+    fontSize: 14,
   },
 
   hint: {
