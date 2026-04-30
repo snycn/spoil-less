@@ -3,6 +3,10 @@ import { db } from '../database/DatabaseManager';
 import { getDefaultExpirationDate } from '../services/expirationService';
 import { cancelItemNotifications, scheduleItemNotifications } from '../services/notificationScheduler';
 
+export function getAllDefaultItems() {
+    return db.getAllSync('SELECT itemName, defaultDays FROM default_expiry_lookup ORDER BY itemName ASC');
+}
+
 export function getFoodItemById(id) {
     return db.getFirstSync('SELECT * FROM food_items WHERE id = ?', [id]);
 }
