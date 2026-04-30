@@ -38,7 +38,8 @@ export function initializeDatabase() {
         CREATE TABLE IF NOT EXISTS notification_preferences (
             id INTEGER PRIMARY KEY,
             enabled INTEGER NOT NULL,
-            daysBefore INTEGER NOT NULL
+            daysBefore INTEGER NOT NULL,
+            expiryThreshold INTEGER NOT NULL DEFAULT 3
         );
 
         CREATE TABLE IF NOT EXISTS default_expiry_lookup (
@@ -48,7 +49,7 @@ export function initializeDatabase() {
     `);
 
     // Single notification preferences row (id=1). INSERT OR IGNORE so it's only created once.
-    db.runSync('INSERT OR IGNORE INTO notification_preferences (id, enabled, daysBefore) VALUES (1, 1, 3)');
+    db.runSync('INSERT OR IGNORE INTO notification_preferences (id, enabled, daysBefore, expiryThreshold) VALUES (1, 1, 3, 3)');
 
     // Default expiries
     const expiryData = [
