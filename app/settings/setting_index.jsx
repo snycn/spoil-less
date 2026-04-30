@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { db } from "@/src/database/DatabaseManager";
 import { cancelAllNotifications, rescheduleAll, sendTestNotification } from "@/src/services/notificationScheduler";
 
@@ -8,11 +8,18 @@ export default function Setting_Index() {
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [daysBefore, setDaysBefore] = useState(3);
+  const [expiryThreshold, setExpiryThreshold] = useState(3);
 
   useFocusEffect(useCallback(() => {
-      const prefs = db.getFirstSync('SELECT enabled, daysBefore FROM notification_preferences WHERE id = 1');
-      if (prefs) { setNotificationsEnabled(!!prefs.enabled); setDaysBefore(prefs.daysBefore); }
+      const prefs = db.getFirstSync('SELECT enabled, daysBefore, expiryThreshold FROM notification_preferences WHERE id = 1');
+      if (prefs) { setNotificationsEnabled(!!prefs.enabled); setDaysBefore(prefs.daysBefore); setExpiryThreshold(prefs.expiryThreshold); }
   }, []));
+
+  const handleThresholdChange = (text) => {
+      const val = parseInt(text);
+      setExpiryThreshold(text);
+      if (!isNaN(val) && val > 0) db.runSync('UPDATE notification_preferences SET expiryThreshold = ? WHERE id = 1', [val]);
+  };
 
   const handleToggle = (value) => {
       setNotificationsEnabled(value);
@@ -49,7 +56,13 @@ export default function Setting_Index() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Days to show as "soon"</Text>
-          <Text style={styles.valueBox}>3</Text>
+          <TextInput
+            style={styles.valueBox}
+            value={String(expiryThreshold)}
+            onChangeText={handleThresholdChange}
+            keyboardType="numeric"
+            maxLength={2}
+          />
         </View>
 
         <TouchableOpacity style={styles.button}
@@ -156,6 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#24323D",
     borderRadius: 6,
     fontFamily: "Poppins_400Regular",
+    color: "#f0f0f0",
   },
 
   button: {
