@@ -76,6 +76,7 @@ export default function AddItemScreen() {
           name: name.trim(),
           expirationDate: expiration || undefined,
           storageLocationId: selectedLocationId,
+          categoryId: category,
           note: note.trim() || null,
       });
       router.back();
@@ -120,6 +121,7 @@ export default function AddItemScreen() {
               onPress={() => {
                 setName(item.name);
                 setExpiration(expiryDateFromDays(item.defaultDays));
+                setCategory(item.category);
               }}
             >
               <View style={styles.quickItemInfo}>
@@ -166,7 +168,7 @@ export default function AddItemScreen() {
         {/* category */}
         <Text style={styles.label}>Category (optional)</Text>
         <View style={styles.categoryRow}>
-          {['Produce', 'Dairy', 'Meat'].map((cat) => (
+          {['Produce', 'Dairy', 'Protein', 'Grains', 'Other'].map((cat) => (
             <TouchableOpacity
               key={cat}
               style={[styles.categoryBtn, category === cat && styles.categoryBtnActive]}
@@ -315,12 +317,12 @@ const styles = StyleSheet.create({
 
   categoryRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: 6,
     marginBottom: 4,
   },
   categoryBtn: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 9,
     borderRadius: 8,
     backgroundColor: "#24323D",
     alignItems: "center",
@@ -331,7 +333,7 @@ const styles = StyleSheet.create({
   categoryBtnText: {
     color: "#aaa",
     fontFamily: "Poppins_600SemiBold",
-    fontSize: 14,
+    fontSize: 12,
   },
   categoryBtnTextActive: {
     color: "#fff",
