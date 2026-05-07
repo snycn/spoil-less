@@ -1,7 +1,8 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
     Alert,
+    FlatList,
     ScrollView,
     StyleSheet,
     Text,
@@ -9,9 +10,15 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { addFoodItem, getAllDefaultItems } from "@/src/repositories/foodItemRepository";
+import { addFoodItem } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
-import { getDefaultExpirationDate } from "@/src/services/expirationService";
+import { foodkeeperItems } from "@/src/utils/foodkeeperUtils";
+
+function expiryDateFromDays(days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString().split('T')[0];
+}
 
 function formatDateInput(text) {
     const digits = text.replace(/\D/g, '').slice(0, 8);
@@ -36,12 +43,20 @@ export default function AddItemScreen() {
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [locations, setLocations] = useState([]);
-  const [defaultItems, setDefaultItems] = useState([]);
-
   useFocusEffect(useCallback(() => {
       setLocations(getStorageLocations());
-      setDefaultItems(getAllDefaultItems());
   }, []));
+
+  const filteredItems = useMemo(() => {
+      const q = name.trim().toLowerCase();
+      if (!q) return foodkeeperItems;
+      return foodkeeperItems.filter(
+          item =>
+              item.name.toLowerCase().includes(q) ||
+              (item.subtitle && item.subtitle.toLowerCase().includes(q)) ||
+              item.keywords.toLowerCase().includes(q)
+      );
+  }, [name]);
 
   const handleSave = () => {
       if (!name.trim()) {
@@ -82,33 +97,40 @@ export default function AddItemScreen() {
       {/* form */}
       <ScrollView style={styles.form}>
 
-        {/* item name */}
+        {/* item name / search */}
         <Text style={styles.label}>Item name</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter item name..."
+          placeholder="Type or search for an item..."
           placeholderTextColor="#666"
           value={name}
           onChangeText={setName}
+          clearButtonMode="while-editing"
         />
-
-        {/* common items quick-pick */}
-        <Text style={styles.label}>Common items</Text>
-        <ScrollView style={styles.quickList} nestedScrollEnabled>
-          {defaultItems.map((item) => (
+        <FlatList
+          style={styles.quickList}
+          data={filteredItems}
+          keyExtractor={item => item.id.toString()}
+          nestedScrollEnabled
+          keyboardShouldPersistTaps="handled"
+          renderItem={({ item }) => (
             <TouchableOpacity
-              key={item.itemName}
               style={styles.quickItem}
               onPress={() => {
-                setName(item.itemName);
-                setExpiration(getDefaultExpirationDate(item.itemName));
+                setName(item.name);
+                setExpiration(expiryDateFromDays(item.defaultDays));
               }}
             >
-              <Text style={styles.quickItemName}>{item.itemName}</Text>
-              <Text style={styles.quickItemDays}>{item.defaultDays} days</Text>
+              <View style={styles.quickItemInfo}>
+                <Text style={styles.quickItemName}>{item.name}</Text>
+                {item.subtitle ? (
+                  <Text style={styles.quickItemSubtitle}>{item.subtitle}</Text>
+                ) : null}
+              </View>
+              <Text style={styles.quickItemDays}>{item.defaultDays}d</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          )}
+        />
 
         {/* expiration date */}
         <Text style={styles.label}>Expiration date</Text>
@@ -223,23 +245,35 @@ const styles = StyleSheet.create({
   },
 
   quickList: {
-    height: 180,
+    height: 200,
     backgroundColor: "#1C2A35",
     borderRadius: 8,
+    marginTop: 6,
     marginBottom: 4,
   },
   quickItem: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderColor: "#253040",
   },
+  quickItemInfo: {
+    flex: 1,
+    marginRight: 8,
+  },
   quickItemName: {
     color: "#f0f0f0",
     fontFamily: "Poppins_400Regular",
     fontSize: 15,
+  },
+  quickItemSubtitle: {
+    color: "#888",
+    fontFamily: "Poppins_400Regular",
+    fontSize: 12,
+    marginTop: 1,
   },
   quickItemDays: {
     color: "#999",
