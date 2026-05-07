@@ -36,6 +36,20 @@ function bestDefaultDays(p) {
     return 21;
 }
 
+// Maps FoodKeeper Category_IDs to our 5 app categories.
+const CATEGORY_MAP = {
+    7:  'Dairy',
+    18: 'Produce', 19: 'Produce',
+    10: 'Protein', 11: 'Protein', 12: 'Protein', 13: 'Protein',  // Meat
+    14: 'Protein', 15: 'Protein', 16: 'Protein', 17: 'Protein',  // Poultry
+    20: 'Protein', 21: 'Protein', 22: 'Protein',                  // Seafood
+    24: 'Protein',                                                  // Vegetarian Proteins
+    2:  'Grains',  3:  'Grains',  4:  'Grains',                   // Baked Goods
+    9:  'Grains',                                                   // Grains, Beans & Pasta
+    1:  'Other',   5:  'Other',   6:  'Other',                    // Baby Food, Beverages, Condiments
+    8:  'Other',   23: 'Other',   25: 'Other',                    // Frozen, Shelf Stable, Deli
+};
+
 const productSheet = foodkeeperData.sheets.find(s => s.name === 'Product');
 
 export const foodkeeperItems = productSheet.data
@@ -46,5 +60,6 @@ export const foodkeeperItems = productSheet.data
         subtitle: p.Name_subtitle ?? null,
         keywords: p.Keywords ?? '',
         defaultDays: bestDefaultDays(p),
+        category: CATEGORY_MAP[p.Category_ID] ?? null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
