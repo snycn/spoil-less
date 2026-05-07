@@ -21,6 +21,15 @@ export default function Setting_Index() {
       if (!isNaN(val) && val > 0) db.runSync('UPDATE notification_preferences SET expiryThreshold = ? WHERE id = 1', [val]);
   };
 
+  const handleDaysBeforeChange = (text) => {
+      const val = parseInt(text);
+      setDaysBefore(text);
+      if (!isNaN(val) && val > 0) {
+          db.runSync('UPDATE notification_preferences SET daysBefore = ? WHERE id = 1', [val]);
+          if (notificationsEnabled) rescheduleAll();
+      }
+  };
+
   const handleToggle = (value) => {
       setNotificationsEnabled(value);
       db.runSync('UPDATE notification_preferences SET enabled = ? WHERE id = 1', [value ? 1 : 0]);
@@ -43,12 +52,23 @@ export default function Setting_Index() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Enable notifications</Text>
-          <Switch value={notificationsEnabled} onValueChange={handleToggle} />
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={handleToggle}
+            trackColor={{ false: "#3e3e3e", true: "#007bff" }}
+            thumbColor={notificationsEnabled ? "#fff" : "#aaa"}
+          />
         </View>
 
         <View style={styles.row}>
           <Text style={styles.label}>Days before expiry</Text>
-          <Text style={styles.valueBox}>{daysBefore}</Text>
+          <TextInput
+            style={styles.valueBox}
+            value={String(daysBefore)}
+            onChangeText={handleDaysBeforeChange}
+            keyboardType="numeric"
+            maxLength={2}
+          />
         </View>
 
         {/* expiring soon */}
