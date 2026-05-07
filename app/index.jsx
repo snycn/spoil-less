@@ -10,6 +10,7 @@ export default function Index() {
   const [items, setItems] = useState([]);
   const [locations, setLocations] = useState([]);
   const [expiringSoonCount, setExpiringSoonCount] = useState(0);
+  const [activeFilter, setActiveFilter] = useState('All');
 
   useFocusEffect(useCallback(() => {
       setItems(getActiveFoodItems());
@@ -33,18 +34,25 @@ export default function Index() {
 
       {/* Category Filters */}
       <View style={styles.filterRow}>
-        <TouchableOpacity><Text style={styles.filterText}>All</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.filterText}>Dairy</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.filterText}>Produce</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.filterText}>Meat</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.filterText}>date</Text></TouchableOpacity>
+        {['All', 'Produce', 'Dairy', 'Protein', 'Grains', 'Other'].map((f) => (
+          <TouchableOpacity
+            key={f}
+            style={[styles.filterBtn, activeFilter === f && styles.filterBtnActive]}
+            onPress={() => setActiveFilter(f)}
+          >
+            <Text style={[styles.filterText, activeFilter === f && styles.filterTextActive]}>{f}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* Items grouped by storage location */}
       <ScrollView style={styles.itemList} contentContainerStyle={styles.itemListContent}>
         {items.length === 0 && <Text style={styles.emptyText}>No items yet. Tap + to add one.</Text>}
         {locations.map((loc) => {
-          const locItems = items.filter(i => i.storageLocationId === loc.id);
+          let locItems = items.filter(i => i.storageLocationId === loc.id);
+          if (activeFilter !== 'All') {
+            locItems = locItems.filter(i => i.categoryId === activeFilter);
+          }
           if (locItems.length === 0) return null;
           return (
             <View key={loc.id}>
@@ -134,17 +142,30 @@ const styles = StyleSheet.create({
   // Filters
   filterRow: {
     flexDirection: "row",
-    padding: 10,
+    padding: 5,
     marginHorizontal: 14,
     marginTop: 10,
     borderRadius: 12,
     backgroundColor: "#1C262E",
-    justifyContent: "space-around",
+    gap: 3,
+  },
+  filterBtn: {
+    flex: 1,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  filterBtnActive: {
+    backgroundColor: "#007bff",
   },
   filterText: {
-    fontSize: 16,
+    fontSize: 12,
     color: "#bbb",
     fontFamily: "Poppins_400Regular",
+  },
+  filterTextActive: {
+    color: "#fff",
+    fontFamily: "Poppins_600SemiBold",
   },
 
   // Section Header
