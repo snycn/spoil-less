@@ -43,6 +43,7 @@ export default function AddItemScreen() {
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [locations, setLocations] = useState([]);
+
   useFocusEffect(useCallback(() => {
       setLocations(getStorageLocations());
   }, []));
@@ -95,7 +96,7 @@ export default function AddItemScreen() {
       </View>
 
       {/* form */}
-      <ScrollView style={styles.form}>
+      <ScrollView style={styles.form} keyboardShouldPersistTaps="handled">
 
         {/* item name / search */}
         <Text style={styles.label}>Item name</Text>
@@ -231,7 +232,6 @@ const styles = StyleSheet.create({
     color: "#f0f0f0",
   },
 
-  // form
   form: {
     padding: 20,
   },
