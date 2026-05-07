@@ -40,12 +40,12 @@ function bestDefaultDays(p) {
 const CATEGORY_MAP = {
     7:  'Dairy',
     18: 'Produce', 19: 'Produce',
-    10: 'Protein', 11: 'Protein', 12: 'Protein', 13: 'Protein',  // Meat
-    14: 'Protein', 15: 'Protein', 16: 'Protein', 17: 'Protein',  // Poultry
+    10: 'Protein', 11: 'Protein', 12: 'Protein', 13: 'Protein',   // Meat
+    14: 'Protein', 15: 'Protein', 16: 'Protein', 17: 'Protein',   // Poultry
     20: 'Protein', 21: 'Protein', 22: 'Protein',                  // Seafood
-    24: 'Protein',                                                  // Vegetarian Proteins
+    24: 'Protein',                                                // Vegetarian Proteins
     2:  'Grains',  3:  'Grains',  4:  'Grains',                   // Baked Goods
-    9:  'Grains',                                                   // Grains, Beans & Pasta
+    9:  'Grains',                                                 // Grains, Beans & Pasta
     1:  'Other',   5:  'Other',   6:  'Other',                    // Baby Food, Beverages, Condiments
     8:  'Other',   23: 'Other',   25: 'Other',                    // Frozen, Shelf Stable, Deli
 };
