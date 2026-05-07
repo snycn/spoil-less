@@ -40,7 +40,7 @@ export default function AddItemScreen() {
   const [name, setName] = useState(prefillName ?? "");
   const [expiration, setExpiration] = useState("");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(null);
   const [note, setNote] = useState("");
   const [locations, setLocations] = useState([]);
 
@@ -165,13 +165,19 @@ export default function AddItemScreen() {
 
         {/* category */}
         <Text style={styles.label}>Category (optional)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Select a category..."
-          placeholderTextColor="#666"
-          value={category}
-          onChangeText={setCategory}
-        />
+        <View style={styles.categoryRow}>
+          {['Produce', 'Dairy', 'Meat'].map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              style={[styles.categoryBtn, category === cat && styles.categoryBtnActive]}
+              onPress={() => setCategory(category === cat ? null : cat)}
+            >
+              <Text style={[styles.categoryBtnText, category === cat && styles.categoryBtnTextActive]}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         {/* note */}
         <Text style={styles.label}>Note (optional)</Text>
@@ -305,6 +311,30 @@ const styles = StyleSheet.create({
     color: "#007bff",
     fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
+  },
+
+  categoryRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 4,
+  },
+  categoryBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: "#24323D",
+    alignItems: "center",
+  },
+  categoryBtnActive: {
+    backgroundColor: "#007bff",
+  },
+  categoryBtnText: {
+    color: "#aaa",
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 14,
+  },
+  categoryBtnTextActive: {
+    color: "#fff",
   },
 
   input: {

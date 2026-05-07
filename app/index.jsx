@@ -53,7 +53,7 @@ export default function Index() {
                 <TouchableOpacity key={item.id}
                   style={styles.itemRow}
                   onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}>
-                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
                   <Text style={styles.itemExpiry}>Expires on: {item.expirationDate}</Text>
                 </TouchableOpacity>
               ))}
@@ -180,9 +180,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemName: {
+    flex: 1,
     fontSize: 16,
     color: "#f0f0f0",
     fontFamily: "Poppins_600SemiBold",
+    marginRight: 8,
   },
   itemExpiry: {
     fontSize: 14,
