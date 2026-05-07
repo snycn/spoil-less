@@ -1,6 +1,6 @@
+import { db } from "@/src/database/DatabaseManager";
 import { getActiveFoodItems, getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
-import { db } from "@/src/database/DatabaseManager";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -11,6 +11,15 @@ export default function Index() {
   const [locations, setLocations] = useState([]);
   const [expiringSoonCount, setExpiringSoonCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [expandedLocations, setExpandedLocations] = useState(new Set());
+
+  const toggleLocation = (locId) => {
+    setExpandedLocations(prev => {
+      const next = new Set(prev);
+      next.has(locId) ? next.delete(locId) : next.add(locId);
+      return next;
+    });
+  };
 
   useFocusEffect(useCallback(() => {
       setItems(getActiveFoodItems());
@@ -54,17 +63,35 @@ export default function Index() {
             locItems = locItems.filter(i => i.categoryId === activeFilter);
           }
           if (locItems.length === 0) return null;
+
+          const color = CARD_COLORS[loc.id.split('').reduce((s, c) => s + c.charCodeAt(0), 0) % CARD_COLORS.length];
+          const isExpanded = expandedLocations.has(loc.id);
+
           return (
-            <View key={loc.id}>
-              <Text style={styles.sectionHeader}>{loc.name}</Text>
-              {locItems.map((item) => (
-                <TouchableOpacity key={item.id}
-                  style={styles.itemRow}
-                  onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}>
-                  <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
-                  <Text style={styles.itemExpiry}>Expires on: {item.expirationDate}</Text>
+            <View key={loc.id} style={[styles.locationCard, { backgroundColor: color }]}>
+
+              {/* Card header — tap to expand/collapse */}
+              <TouchableOpacity style={styles.cardHeader} onPress={() => toggleLocation(loc.id)}>
+                <View>
+                  <Text style={styles.cardTitle}>{loc.name}</Text>
+                  <Text style={styles.cardSubtitle}>{locItems.length} item{locItems.length !== 1 ? 's' : ''}</Text>
+                </View>
+                <Text style={styles.cardChevron}>{isExpanded ? '▲' : '▼'}</Text>
+              </TouchableOpacity>
+
+              {/* All items when expanded */}
+              {isExpanded && locItems.map(item => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.cardItem}
+                  onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}
+                >
+                  <Text style={styles.cardItemName} numberOfLines={1}>{item.name}</Text>
+                  <Text style={styles.cardItemExpiry}>{item.expirationDate}</Text>
                 </TouchableOpacity>
               ))}
+
+              <View style={{ height: 8 }} />
             </View>
           );
         })}
@@ -109,6 +136,8 @@ export default function Index() {
     </View>
   );
 }
+
+const CARD_COLORS = ['#1877F2', '#E8762D', '#27AE60', '#E74C3C', '#8E44AD', '#16A085', '#F39C12', '#E91E63'];
 
 const styles = StyleSheet.create({
 
@@ -168,21 +197,13 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
   },
 
-  // Section Header
-  sectionHeader: {
-    marginTop: 20,
-    marginLeft: 15,
-    fontSize: 20,
-    fontFamily: "Poppins_700Bold",
-    color: "#d0d0d0",
-  },
-
   // Item list
   itemList: {
     flex: 1,
   },
   itemListContent: {
     paddingBottom: 130,
+    paddingTop: 4,
   },
   emptyText: {
     color: "#999",
@@ -190,27 +211,59 @@ const styles = StyleSheet.create({
     marginTop: 40,
     fontFamily: "Poppins_400Regular",
   },
-  itemRow: {
+
+  // Location cards
+  locationCard: {
+    marginHorizontal: 14,
+    marginTop: 12,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    marginHorizontal: 14,
-    marginTop: 8,
-    backgroundColor: "#1C262E",
-    borderRadius: 12,
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 10,
   },
-  itemName: {
+  cardTitle: {
+    fontSize: 22,
+    fontFamily: "Poppins_700Bold",
+    color: "#fff",
+  },
+  cardSubtitle: {
+    fontSize: 13,
+    fontFamily: "Poppins_400Regular",
+    color: "rgba(255,255,255,0.7)",
+    marginTop: 1,
+  },
+  cardChevron: {
+    fontSize: 13,
+    color: "rgba(255,255,255,0.8)",
+  },
+  cardItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    marginHorizontal: 10,
+    marginBottom: 6,
+    borderRadius: 10,
+  },
+  cardItemName: {
     flex: 1,
-    fontSize: 16,
-    color: "#f0f0f0",
+    fontSize: 15,
     fontFamily: "Poppins_600SemiBold",
+    color: "#fff",
     marginRight: 8,
   },
-  itemExpiry: {
-    fontSize: 14,
-    color: "#999",
+  cardItemExpiry: {
+    fontSize: 13,
     fontFamily: "Poppins_400Regular",
+    color: "rgba(255,255,255,0.75)",
   },
 
 // Floating Add Button
