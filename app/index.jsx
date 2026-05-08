@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
 // Floating Add Button
 floatingBtn: {
   position: "absolute",
-  bottom: 130,
+  bottom: 90,
   right: 25,
   width: 60,
   height: 60,
@@ -290,7 +290,7 @@ plus: {
 // footer
   footer: {
     position: "absolute",
-    bottom: 50,
+    bottom: 10,
     left: 14,
     right: 14,
     height: 60,

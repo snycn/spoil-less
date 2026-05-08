@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   // footer
   footer: {
     position: "absolute",
-    bottom: 50,
+    bottom: 10,
     left: 14,
     right: 14,
     height: 60,

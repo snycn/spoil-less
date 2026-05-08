@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1C262E",
     marginHorizontal: 14,
     marginTop: 4,
-    marginBottom: 130,
+    marginBottom: 90,
     borderRadius: 16,
     overflow: "hidden",
   },
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
 // footer
   footer: {
     position: "absolute",
-    bottom: 50,
+    bottom: 10,
     left: 14,
     right: 14,
     height: 60,
