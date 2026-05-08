@@ -151,7 +151,8 @@ const styles = StyleSheet.create({
   // Notification Bar
   notificationBar: {
     backgroundColor: "#351A20",
-    padding: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
     marginHorizontal: 14,
     marginTop: 14,
     borderRadius: 12,
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
   // Filters
   filterRow: {
     flexDirection: "row",
-    padding: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 5,
     marginHorizontal: 14,
     marginTop: 10,
     borderRadius: 12,
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
   // Location cards
   locationCard: {
     marginHorizontal: 14,
-    marginTop: 12,
+    marginTop: 18,
     borderRadius: 16,
     overflow: "hidden",
   },
