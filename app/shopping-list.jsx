@@ -36,22 +36,24 @@ export default function ShoppingList() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.listContent}>
-        {items.length === 0 && <Text style={styles.emptyText}>Nothing on the list.</Text>}
-        {items.map((item) => (
-          <View key={item.id} style={styles.itemRow}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <View style={styles.itemActions}>
-              <TouchableOpacity onPress={() => router.push({ pathname: '/add-item', params: { prefillName: item.name } })}>
-                <Text style={styles.moveText}>Move to tracking</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => { removeShoppingListItem(item.id); loadData(); }}>
-                <Text style={styles.removeText}>✕</Text>
-              </TouchableOpacity>
+      <View style={styles.listContainer}>
+        <ScrollView contentContainerStyle={styles.listContent}>
+          {items.length === 0 && <Text style={styles.emptyText}>Nothing on the list.</Text>}
+          {items.map((item) => (
+            <View key={item.id} style={styles.itemRow}>
+              <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
+              <View style={styles.itemActions}>
+                <TouchableOpacity onPress={() => router.push({ pathname: '/add-item', params: { prefillName: item.name } })}>
+                  <Text style={styles.moveText}>Move to tracking</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { removeShoppingListItem(item.id); loadData(); }}>
+                  <Text style={styles.removeText}>✕</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
 
       <View style={styles.footer}>
 
@@ -137,9 +139,18 @@ const styles = StyleSheet.create({
   },
 
   // list
+  listContainer: {
+    flex: 1,
+    backgroundColor: "#1C262E",
+    marginHorizontal: 14,
+    marginTop: 4,
+    marginBottom: 130,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
   listContent: {
     padding: 16,
-    paddingBottom: 130,
+    paddingBottom: 16,
   },
   emptyText: {
     color: "#999",
@@ -152,13 +163,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 14,
     marginBottom: 8,
-    backgroundColor: "#1C262E",
+    backgroundColor: "#24323D",
     borderRadius: 12,
   },
   itemName: {
+    flex: 1,
     fontSize: 16,
     color: "#d0d0d0",
     fontFamily: "Poppins_400Regular",
+    marginRight: 12,
   },
   itemActions: {
     flexDirection: "row",
