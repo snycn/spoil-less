@@ -1,4 +1,5 @@
 import { getExpiringSoonItems } from "@/src/repositories/foodItemRepository";
+import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 import { getDaysUntilExpiration } from "@/src/services/expirationService";
 import { db } from "@/src/database/DatabaseManager";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -9,11 +10,15 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 export default function ExpiringSoon() {
   const router = useRouter();
   const [items, setItems] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   useFocusEffect(useCallback(() => {
     const prefs = db.getFirstSync('SELECT expiryThreshold FROM notification_preferences WHERE id = 1');
     setItems(getExpiringSoonItems(prefs?.expiryThreshold ?? 3));
+    setLocations(getStorageLocations());
   }, []));
+
+  const locationName = (id) => locations.find(l => l.id === id)?.name ?? '';
 
   return (
     <View style={styles.container}>
@@ -36,7 +41,10 @@ export default function ExpiringSoon() {
           return (
             <TouchableOpacity key={item.id} onPress={() => router.push({ pathname: '/item-detail', params: { id: item.id } })}
               style={styles.itemRow}>
-              <Text style={styles.itemName}>{item.name}</Text>
+              <View>
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.itemLocation}>{locationName(item.storageLocationId)}</Text>
+              </View>
               <Text style={styles.itemLabel}>{label}</Text>
             </TouchableOpacity>
           );
@@ -105,6 +113,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#f0f0f0",
     fontFamily: "Poppins_400Regular",
+  },
+  itemLocation: {
+    fontSize: 13,
+    color: "#888",
+    fontFamily: "Poppins_400Regular",
+    marginTop: 2,
   },
   itemLabel: {
     color: "#ff6b6b",
