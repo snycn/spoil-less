@@ -1,18 +1,20 @@
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
-import {
-    Alert,
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
 import { addFoodItem } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 import { foodkeeperItems } from "@/src/utils/foodkeeperUtils";
+import * as ImagePicker from "expo-image-picker";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useMemo, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 function expiryDateFromDays(days) {
     const date = new Date();
@@ -42,6 +44,7 @@ export default function AddItemScreen() {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [category, setCategory] = useState(null);
   const [note, setNote] = useState("");
+  const [photoUri, setPhotoUri] = useState(null);
   const [locations, setLocations] = useState([]);
 
   useFocusEffect(useCallback(() => {
@@ -58,6 +61,16 @@ export default function AddItemScreen() {
               item.keywords.toLowerCase().includes(q)
       );
   }, [name]);
+
+  const handleCamera = async () => {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+          Alert.alert('Permission required', 'Camera access is needed to attach a photo.');
+          return;
+      }
+      const result = await ImagePicker.launchCameraAsync({ mediaTypes: 'images', quality: 0.7 });
+      if (!result.canceled) setPhotoUri(result.assets[0].uri);
+  };
 
   const handleSave = () => {
       if (!name.trim()) {
@@ -78,6 +91,7 @@ export default function AddItemScreen() {
           storageLocationId: selectedLocationId,
           categoryId: category,
           note: note.trim() || null,
+          photoUri: photoUri || null,
       });
       router.back();
   };
@@ -193,9 +207,23 @@ export default function AddItemScreen() {
         />
 
         {/* attach photo */}
-        <TouchableOpacity style={styles.photoButton}>
-          <Text style={styles.photoText}>Attach photo (optional)</Text>
-        </TouchableOpacity>
+        {photoUri ? (
+          <View style={styles.photoPreviewContainer}>
+            <Image source={{ uri: photoUri }} style={styles.photoPreview} />
+            <View style={styles.photoActions}>
+              <TouchableOpacity style={styles.retakeBtn} onPress={handleCamera}>
+                <Text style={styles.retakeText}>Retake</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.removeBtn} onPress={() => setPhotoUri(null)}>
+                <Text style={styles.removeText}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.photoButton} onPress={handleCamera}>
+            <Text style={styles.photoText}>Attach photo (optional)</Text>
+          </TouchableOpacity>
+        )}
 
         {/* save button */}
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
@@ -374,11 +402,47 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-
   photoText: {
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
     color: "#f0f0f0",
+  },
+  photoPreviewContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    gap: 10,
+  },
+  photoActions: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  photoPreview: {
+    width: "100%",
+    aspectRatio: 3/4,
+    borderRadius: 10,
+    resizeMode: "contain",
+  },
+  retakeBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    backgroundColor: "#2D3848",
+    borderRadius: 8,
+  },
+  retakeText: {
+    color: "#f0f0f0",
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 14,
+  },
+  removeBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    backgroundColor: "#2D1A1A",
+    borderRadius: 8,
+  },
+  removeText: {
+    color: "#ff6b6b",
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 14,
   },
 
   saveButton: {
