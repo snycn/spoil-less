@@ -1,4 +1,5 @@
 import { addFoodItem } from "@/src/repositories/foodItemRepository";
+import { removeShoppingListItem } from "@/src/repositories/shoppingListRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 import { foodkeeperItems } from "@/src/utils/foodkeeperUtils";
 import * as ImagePicker from "expo-image-picker";
@@ -37,7 +38,7 @@ function isValidDate(str) {
 
 export default function AddItemScreen() {
   const router = useRouter();
-  const { prefillName } = useLocalSearchParams();
+  const { prefillName, fromShoppingListId } = useLocalSearchParams();
 
   const [name, setName] = useState(prefillName ?? "");
   const [expiration, setExpiration] = useState("");
@@ -93,6 +94,7 @@ export default function AddItemScreen() {
           note: note.trim() || null,
           photoUri: photoUri || null,
       });
+      if (fromShoppingListId) removeShoppingListItem(fromShoppingListId);
       router.back();
   };
 

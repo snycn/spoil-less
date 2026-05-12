@@ -1,4 +1,4 @@
-import { addShoppingListItem, getShoppingList, removeShoppingListItem } from "@/src/repositories/shoppingListRepository";
+import { addShoppingListItem, clearShoppingList, getShoppingList, removeShoppingListItem, renameShoppingListItem } from "@/src/repositories/shoppingListRepository";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -7,17 +7,40 @@ export default function ShoppingList() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [newName, setNewName] = useState("");
+  const [checkedIds, setCheckedIds] = useState(new Set());
+  const [editingId, setEditingId] = useState(null);
+  const [editingName, setEditingName] = useState("");
 
-  const loadData = useCallback(() => setItems(getShoppingList()), []);
+  const loadData = useCallback(() => {
+    setItems(getShoppingList());
+    setCheckedIds(new Set());
+    setEditingId(null);
+  }, []);
   useFocusEffect(loadData);
 
   const handleAdd = () => {
-      const name = newName.trim();
-      if (!name) return;
-      const result = addShoppingListItem(name);
-      if (result.duplicateExists) Alert.alert('Heads up', `You already have ${name} in active tracking.`);
-      setNewName("");
-      loadData();
+    const name = newName.trim();
+    if (!name) return;
+    const result = addShoppingListItem(name);
+    if (result.duplicateExists) Alert.alert('Heads up', `You already have ${name} in active tracking.`);
+    setNewName("");
+    loadData();
+  };
+
+  const handleClearAll = () => Alert.alert('Clear All', 'Remove everything from your shopping list?', [
+    { text: 'Cancel', style: 'cancel' },
+    { text: 'Clear', style: 'destructive', onPress: () => { clearShoppingList(); loadData(); } },
+  ]);
+
+  const toggleCheck = (id) => setCheckedIds((prev) => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  const saveEdit = () => {
+    if (editingName.trim() && editingId) { renameShoppingListItem(editingId, editingName.trim()); loadData(); }
+    setEditingId(null);
   };
 
   return (
@@ -25,6 +48,11 @@ export default function ShoppingList() {
 
       <View style={styles.Shopping_listHeader}>
         <Text style={styles.Shopping_listHeaderText}>Shopping List</Text>
+        {items.length > 0 && (
+          <TouchableOpacity onPress={handleClearAll}>
+            <Text style={styles.clearAllText}>Clear All</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.addRow}>
@@ -39,19 +67,41 @@ export default function ShoppingList() {
       <View style={styles.listContainer}>
         <ScrollView contentContainerStyle={styles.listContent}>
           {items.length === 0 && <Text style={styles.emptyText}>Nothing on the list.</Text>}
-          {items.map((item) => (
-            <View key={item.id} style={styles.itemRow}>
-              <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
-              <View style={styles.itemActions}>
-                <TouchableOpacity onPress={() => router.push({ pathname: '/add-item', params: { prefillName: item.name } })}>
-                  <Text style={styles.moveText}>Move to tracking</Text>
+          {items.map((item) => {
+            const isChecked = checkedIds.has(item.id);
+            const isEditing = editingId === item.id;
+            return (
+              <View key={item.id} style={styles.itemRow}>
+                <TouchableOpacity onPress={() => toggleCheck(item.id)} style={styles.checkboxWrap}>
+                  <View style={[styles.checkboxBox, isChecked && styles.checkboxChecked]}>
+                    {isChecked && <Text style={styles.checkmark}>✓</Text>}
+                  </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { removeShoppingListItem(item.id); loadData(); }}>
-                  <Text style={styles.removeText}>✕</Text>
-                </TouchableOpacity>
+
+                <View style={styles.itemInfo}>
+                  {isEditing ? (
+                    <TextInput style={styles.renameInput} value={editingName}
+                      onChangeText={setEditingName} onSubmitEditing={saveEdit} onBlur={saveEdit} autoFocus />
+                  ) : (
+                    <TouchableOpacity onPress={() => { setEditingId(item.id); setEditingName(item.name); }}>
+                      <Text style={[styles.itemName, isChecked && styles.itemNameChecked]} numberOfLines={1}>{item.name}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {!isEditing && (
+                  <View style={styles.itemActions}>
+                    <TouchableOpacity onPress={() => router.push({ pathname: '/add-item', params: { prefillName: item.name, fromShoppingListId: item.id } })}>
+                      <Text style={styles.moveText}>Move to tracking</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { removeShoppingListItem(item.id); loadData(); }}>
+                      <Text style={styles.removeText}>✕</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
-            </View>
-          ))}
+            );
+          })}
         </ScrollView>
       </View>
 
@@ -89,9 +139,12 @@ const styles = StyleSheet.create({
   Shopping_listHeader: {
     width: "100%",
     paddingVertical: 15,
+    paddingHorizontal: 16,
     backgroundColor: "#1C262E",
     borderBottomWidth: 1,
     borderColor: "#3a3a3a",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
 
@@ -99,6 +152,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "Poppins_700Bold",
     color: "#f0f0f0",
+  },
+
+  clearAllText: {
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#ff6b6b",
   },
 
   // add row
@@ -135,7 +194,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 90,
     borderRadius: 16,
-    overflow: "hidden",
   },
   listContent: {
     padding: 16,
@@ -155,25 +213,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#24323D",
     borderRadius: 12,
   },
+  checkboxWrap: { paddingRight: 8 },
+  checkboxBox: {
+    width: 22, height: 22, borderRadius: 5,
+    borderWidth: 2, borderColor: "#555",
+    justifyContent: "center", alignItems: "center",
+  },
+  checkboxChecked: { backgroundColor: "#007bff", borderColor: "#007bff" },
+  checkmark: { color: "#fff", fontSize: 13, fontFamily: "Poppins_700Bold", lineHeight: 16 },
+
+  itemInfo: { flex: 1, marginRight: 10 },
   itemName: {
-    flex: 1,
     fontSize: 16,
     color: "#d0d0d0",
     fontFamily: "Poppins_400Regular",
-    marginRight: 12,
   },
-  itemActions: {
-    flexDirection: "row",
-    gap: 12,
+  itemNameChecked: { color: "#555", textDecorationLine: "line-through" },
+  renameInput: {
+    fontSize: 16, color: "#f0f0f0", fontFamily: "Poppins_400Regular",
+    backgroundColor: "#24323D", borderRadius: 6, paddingHorizontal: 8, paddingVertical: 2,
   },
-  moveText: {
-    color: "#007bff",
-    fontFamily: "Poppins_600SemiBold",
-  },
-  removeText: {
-    color: "#ff6b6b",
-    fontFamily: "Poppins_700Bold",
-  },
+  itemActions: { flexDirection: "row", gap: 12 },
+  moveText: { color: "#007bff", fontFamily: "Poppins_600SemiBold" },
+  removeText: { color: "#ff6b6b", fontFamily: "Poppins_700Bold" },
 
 // footer
   footer: {
