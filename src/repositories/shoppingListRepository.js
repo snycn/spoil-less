@@ -28,6 +28,14 @@ export function removeShoppingListItem(id) {
     db.runSync('DELETE FROM shopping_list_items WHERE id = ?', [id]);
 }
 
+export function renameShoppingListItem(id, name) {
+    db.runSync('UPDATE shopping_list_items SET name = ? WHERE id = ?', [name, id]);
+}
+
+export function clearShoppingList() {
+    db.runSync('DELETE FROM shopping_list_items');
+}
+
 export function moveToTracking(shoppingListItemId, itemData) {
     let newItem;
     db.withTransactionSync(() => {
