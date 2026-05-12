@@ -1,5 +1,6 @@
 import { deleteFoodItem, getFoodItemById, markAsDiscarded, markAsUsed, updateFoodItem } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -16,6 +17,7 @@ export default function ItemDetail() {
   const [editLocationId, setEditLocationId] = useState(null);
   const [editCategory, setEditCategory] = useState(null);
   const [editNote, setEditNote] = useState('');
+  const [editPhotoUri, setEditPhotoUri] = useState(null);
 
   const locations = getStorageLocations();
   const locationName = locations.find(l => l.id === item?.storageLocationId)?.name ?? '—';
@@ -25,15 +27,23 @@ export default function ItemDetail() {
     setEditLocationId(item.storageLocationId);
     setEditCategory(item.categoryId ?? null);
     setEditNote(item.note ?? '');
+    setEditPhotoUri(item.photoUri ?? null);
     setIsEditing(true);
   };
 
   const handleSave = () => {
     if (!editName.trim()) { Alert.alert('Name is required.'); return; }
     if (!editLocationId) { Alert.alert('Please select a storage location.'); return; }
-    updateFoodItem(id, { name: editName.trim(), storageLocationId: editLocationId, categoryId: editCategory, note: editNote.trim() || null });
+    updateFoodItem(id, { name: editName.trim(), storageLocationId: editLocationId, categoryId: editCategory, note: editNote.trim() || null, photoUri: editPhotoUri });
     setItem(getFoodItemById(id));
     setIsEditing(false);
+  };
+
+  const handleEditCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') { Alert.alert('Permission required', 'Camera access is needed to attach a photo.'); return; }
+    const result = await ImagePicker.launchCameraAsync({ mediaTypes: 'images', quality: 0.7 });
+    if (!result.canceled) setEditPhotoUri(result.assets[0].uri);
   };
 
   const handleUsed    = () => { markAsUsed(id); router.back(); };
@@ -120,9 +130,16 @@ export default function ItemDetail() {
             : <Text style={styles.detailValue}>{item.note || 'Empty'}</Text>
           }
 
-          {item.photoUri ? (
+          <Text style={styles.detailLabel}>Photo:</Text>
+          {isEditing ? (
             <>
-              <Text style={styles.detailLabel}>Photo:</Text>
+              <TouchableOpacity style={styles.photoToggle} onPress={handleEditCamera}>
+                <Text style={styles.photoToggleText}>{editPhotoUri ? 'Retake photo' : 'Add photo'}</Text>
+              </TouchableOpacity>
+              {editPhotoUri && <Image source={{ uri: editPhotoUri }} style={styles.photo} />}
+            </>
+          ) : item.photoUri ? (
+            <>
               <TouchableOpacity style={styles.photoToggle} onPress={() => setPhotoVisible(v => !v)}>
                 <Text style={styles.photoToggleText}>{photoVisible ? 'Hide photo' : 'Show photo'}</Text>
               </TouchableOpacity>
@@ -212,28 +229,150 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
 
-  editBtn: { fontSize: 16, color: "#007bff", fontFamily: "Poppins_600SemiBold", width: 50, textAlign: "right" },
-  editNameInput: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#f0f0f0", flexShrink: 1, marginRight: 10, borderBottomWidth: 1, borderColor: "#007bff", paddingVertical: 2 },
-  editOption: { paddingVertical: 10, paddingHorizontal: 12, backgroundColor: "#24323D", borderRadius: 8, marginBottom: 6 },
-  editOptionSelected: { backgroundColor: "#007bff" },
-  editOptionText: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#d0d0d0" },
-  editOptionTextSelected: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#fff" },
-  categoryRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 4 },
-  categoryBtn: { paddingVertical: 7, paddingHorizontal: 12, borderRadius: 8, backgroundColor: "#24323D" },
-  categoryBtnActive: { backgroundColor: "#007bff" },
-  categoryBtnText: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#aaa" },
-  categoryBtnTextActive: { color: "#fff" },
-  editNoteInput: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#f0f0f0", backgroundColor: "#24323D", borderRadius: 8, padding: 10, minHeight: 80, textAlignVertical: "top" },
-  itemName: { fontSize: 22, fontFamily: "Poppins_700Bold", color: "#f0f0f0", flexShrink: 1, marginRight: 10 },
-  detailLabel: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#888", marginTop: 20, marginBottom: 4, paddingLeft: 4 },
-  detailValue: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#f0f0f0", paddingLeft: 4 },
-  bottomButtons: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 10 },
-  actionRow: { flexDirection: "row", gap: 10 },
-  btnUsed:    { flex: 1, backgroundColor: "#27AE60", padding: 14, borderRadius: 10, alignItems: "center" },
-  btnDiscard: { flex: 1, backgroundColor: "#E67E22", padding: 14, borderRadius: 10, alignItems: "center" },
-  btnDelete:  { marginTop: 12, backgroundColor: "#C0392B", padding: 14, borderRadius: 10, alignItems: "center" },
-  btnText:    { color: "#fff", fontFamily: "Poppins_700Bold" },
-  photoToggle: { marginTop: 4, marginBottom: 10, alignSelf: "flex-start", paddingVertical: 10, paddingHorizontal: 18, backgroundColor: "#1C262E", borderRadius: 8 },
-  photoToggleText: { color: "#007bff", fontFamily: "Poppins_600SemiBold", fontSize: 15 },
-  photo: { width: "100%", aspectRatio: 3/4, borderRadius: 12, marginBottom: 16, resizeMode: "contain" },
+  editBtn: {
+    fontSize: 16,
+    color: "#007bff",
+    fontFamily: "Poppins_600SemiBold",
+    width: 50,
+    textAlign: "right",
+  },
+  editNameInput: {
+    fontSize: 20,
+    fontFamily: "Poppins_700Bold",
+    color: "#f0f0f0",
+    flexShrink: 1,
+    marginRight: 10,
+    borderBottomWidth: 1,
+    borderColor: "#007bff",
+    paddingVertical: 2,
+  },
+  editOption: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: "#24323D",
+    borderRadius: 8,
+    marginBottom: 6,
+  },
+  editOptionSelected: {
+    backgroundColor: "#007bff",
+  },
+  editOptionText: {
+    fontSize: 15,
+    fontFamily: "Poppins_400Regular",
+    color: "#d0d0d0",
+  },
+  editOptionTextSelected: {
+    fontSize: 15,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#fff",
+  },
+  categoryRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+    marginTop: 4,
+  },
+  categoryBtn: {
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: "#24323D",
+  },
+  categoryBtnActive: {
+    backgroundColor: "#007bff",
+  },
+  categoryBtnText: {
+    fontSize: 13,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#aaa",
+  },
+  categoryBtnTextActive: {
+    color: "#fff",
+  },
+  editNoteInput: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: "#f0f0f0",
+    backgroundColor: "#24323D",
+    borderRadius: 8,
+    padding: 10,
+    minHeight: 80,
+    textAlignVertical: "top",
+  },
+  itemName: {
+    fontSize: 22,
+    fontFamily: "Poppins_700Bold",
+    color: "#f0f0f0",
+    flexShrink: 1,
+    marginRight: 10,
+  },
+  detailLabel: {
+    fontSize: 15,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#888",
+    marginTop: 20,
+    marginBottom: 4,
+    paddingLeft: 4,
+  },
+  detailValue: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: "#f0f0f0",
+    paddingLeft: 4,
+  },
+  bottomButtons: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
+  },
+  actionRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  btnUsed: {
+    flex: 1,
+    backgroundColor: "#27AE60",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  btnDiscard: {
+    flex: 1,
+    backgroundColor: "#E67E22",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  btnDelete: {
+    marginTop: 12,
+    backgroundColor: "#C0392B",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  btnText: {
+    color: "#fff",
+    fontFamily: "Poppins_700Bold",
+  },
+  photoToggle: {
+    marginTop: 4,
+    marginBottom: 10,
+    alignSelf: "flex-start",
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    backgroundColor: "#1C262E",
+    borderRadius: 8,
+  },
+  photoToggleText: {
+    color: "#007bff",
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 15,
+  },
+  photo: {
+    width: "100%",
+    aspectRatio: 3/4,
+    borderRadius: 12,
+    marginBottom: 16,
+    resizeMode: "contain",
+  },
 });
