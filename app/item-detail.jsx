@@ -1,17 +1,40 @@
-import { deleteFoodItem, getFoodItemById, markAsDiscarded, markAsUsed } from "@/src/repositories/foodItemRepository";
+import { deleteFoodItem, getFoodItemById, markAsDiscarded, markAsUsed, updateFoodItem } from "@/src/repositories/foodItemRepository";
 import { getStorageLocations } from "@/src/repositories/storageLocationRepository";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+
+const CATEGORIES = ['Produce', 'Dairy', 'Protein', 'Grains', 'Other'];
 
 export default function ItemDetail() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const item = getFoodItemById(id);
+  const [item, setItem] = useState(() => getFoodItemById(id));
   const [photoVisible, setPhotoVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editLocationId, setEditLocationId] = useState(null);
+  const [editCategory, setEditCategory] = useState(null);
+  const [editNote, setEditNote] = useState('');
 
   const locations = getStorageLocations();
   const locationName = locations.find(l => l.id === item?.storageLocationId)?.name ?? '—';
+
+  const startEdit = () => {
+    setEditName(item.name);
+    setEditLocationId(item.storageLocationId);
+    setEditCategory(item.categoryId ?? null);
+    setEditNote(item.note ?? '');
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    if (!editName.trim()) { Alert.alert('Name is required.'); return; }
+    if (!editLocationId) { Alert.alert('Please select a storage location.'); return; }
+    updateFoodItem(id, { name: editName.trim(), storageLocationId: editLocationId, categoryId: editCategory, note: editNote.trim() || null });
+    setItem(getFoodItemById(id));
+    setIsEditing(false);
+  };
 
   const handleUsed    = () => { markAsUsed(id); router.back(); };
   const handleDiscard = () => { markAsDiscarded(id); router.back(); };
@@ -29,8 +52,10 @@ export default function ItemDetail() {
 
         <Text style={styles.headerText}>Item Detail</Text>
 
-        {/* spacer */}
-        <View style={{ width: 50 }} />
+        {isEditing
+          ? <TouchableOpacity onPress={handleSave}><Text style={styles.editBtn}>Save</Text></TouchableOpacity>
+          : <TouchableOpacity onPress={startEdit}><Text style={styles.editBtn}>Edit</Text></TouchableOpacity>
+        }
       </View>
 
       {!item ? <Text style={styles.notFound}>Item not found.</Text> : (
@@ -48,7 +73,10 @@ export default function ItemDetail() {
             return (
               <View style={styles.summaryCard}>
                 <View style={styles.summaryCardTop}>
-                  <Text style={styles.itemName}>{item.name}</Text>
+                  {isEditing
+                    ? <TextInput style={styles.editNameInput} value={editName} onChangeText={setEditName} />
+                    : <Text style={styles.itemName}>{item.name}</Text>
+                  }
                   <View style={[styles.badge, { backgroundColor: badgeColor }]}>
                     <Text style={styles.badgeText}>{badgeLabel}</Text>
                   </View>
@@ -60,13 +88,37 @@ export default function ItemDetail() {
           })()}
 
           <Text style={styles.detailLabel}>Storage Location</Text>
-          <Text style={styles.detailValue}>{locationName}</Text>
+          {isEditing
+            ? locations.map(loc => (
+                <TouchableOpacity key={loc.id}
+                  style={[styles.editOption, editLocationId === loc.id && styles.editOptionSelected]}
+                  onPress={() => setEditLocationId(loc.id)}>
+                  <Text style={editLocationId === loc.id ? styles.editOptionTextSelected : styles.editOptionText}>{loc.name}</Text>
+                </TouchableOpacity>
+              ))
+            : <Text style={styles.detailValue}>{locationName}</Text>
+          }
 
           <Text style={styles.detailLabel}>Category</Text>
-          <Text style={styles.detailValue}>{item.categoryId || '—'}</Text>
+          {isEditing
+            ? <View style={styles.categoryRow}>
+                {CATEGORIES.map(cat => (
+                  <TouchableOpacity key={cat}
+                    style={[styles.categoryBtn, editCategory === cat && styles.categoryBtnActive]}
+                    onPress={() => setEditCategory(editCategory === cat ? null : cat)}>
+                    <Text style={[styles.categoryBtnText, editCategory === cat && styles.categoryBtnTextActive]}>{cat}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            : <Text style={styles.detailValue}>{item.categoryId || '—'}</Text>
+          }
 
           <Text style={styles.detailLabel}>Note</Text>
-          <Text style={styles.detailValue}>{item.note || 'Empty'}</Text>
+          {isEditing
+            ? <TextInput style={styles.editNoteInput} value={editNote} onChangeText={setEditNote}
+                placeholder="Add a note..." placeholderTextColor="#666" multiline />
+            : <Text style={styles.detailValue}>{item.note || 'Empty'}</Text>
+          }
 
           {item.photoUri ? (
             <>
@@ -160,6 +212,18 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
 
+  editBtn: { fontSize: 16, color: "#007bff", fontFamily: "Poppins_600SemiBold", width: 50, textAlign: "right" },
+  editNameInput: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#f0f0f0", flexShrink: 1, marginRight: 10, borderBottomWidth: 1, borderColor: "#007bff", paddingVertical: 2 },
+  editOption: { paddingVertical: 10, paddingHorizontal: 12, backgroundColor: "#24323D", borderRadius: 8, marginBottom: 6 },
+  editOptionSelected: { backgroundColor: "#007bff" },
+  editOptionText: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#d0d0d0" },
+  editOptionTextSelected: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#fff" },
+  categoryRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 4 },
+  categoryBtn: { paddingVertical: 7, paddingHorizontal: 12, borderRadius: 8, backgroundColor: "#24323D" },
+  categoryBtnActive: { backgroundColor: "#007bff" },
+  categoryBtnText: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#aaa" },
+  categoryBtnTextActive: { color: "#fff" },
+  editNoteInput: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#f0f0f0", backgroundColor: "#24323D", borderRadius: 8, padding: 10, minHeight: 80, textAlignVertical: "top" },
   itemName: { fontSize: 22, fontFamily: "Poppins_700Bold", color: "#f0f0f0", flexShrink: 1, marginRight: 10 },
   detailLabel: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#888", marginTop: 20, marginBottom: 4, paddingLeft: 4 },
   detailValue: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#f0f0f0", paddingLeft: 4 },
