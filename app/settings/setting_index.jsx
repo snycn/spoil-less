@@ -2,7 +2,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { db } from "@/src/database/DatabaseManager";
-import { cancelAllNotifications, rescheduleAll, sendTestNotification } from "@/src/services/notificationScheduler";
+import { cancelAllNotifications, rescheduleAll } from "@/src/services/notificationScheduler";
 
 export default function Setting_Index() {
   const router = useRouter();
@@ -90,9 +90,6 @@ export default function Setting_Index() {
           <Text style={styles.buttonText}>Manage Storage Locations</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => sendTestNotification(5)}>
-          <Text style={styles.buttonText}>Send test notification (5s)</Text>
-        </TouchableOpacity>
 
       </View>
 
