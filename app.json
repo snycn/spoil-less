@@ -45,7 +45,10 @@
         }
       ],
       "expo-sqlite",
-      "expo-notifications"
+      "expo-notifications",
+      ["expo-image-picker", {
+        "cameraPermission": "Allow Spoil-Less to access your camera to attach photos to food items."
+      }]
     ],
     "experiments": {
       "typedRoutes": true,
