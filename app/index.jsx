@@ -99,32 +99,21 @@ export default function Index() {
 
       {/* Footer */}
       <View style={styles.footer}>
-
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() => router.push("/shopping-list")}
-        >
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/shopping-list")}>
           <Text style={styles.footerText}>Shopping</Text>
         </TouchableOpacity>
-
         <View style={styles.separator} />
-
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() => router.push("/")}
-        >
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
-
         <View style={styles.separator} />
-
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() => router.push("/settings/setting_index")}
-          >
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/analytics")}>
+          <Text style={styles.footerText}>Stats</Text>
+        </TouchableOpacity>
+        <View style={styles.separator} />
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/settings/setting_index")}>
           <Text style={styles.footerText}>Settings</Text>
         </TouchableOpacity>
-
       </View>
         {/* Floating Add Button */}
         <TouchableOpacity
@@ -307,7 +296,7 @@ plus: {
   },
 
   footerText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#f0f0f0",
     fontFamily: "Poppins_600SemiBold",
   },
